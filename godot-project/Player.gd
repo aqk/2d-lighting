@@ -19,10 +19,21 @@ var roll_vector = Vector2.DOWN
 var state = RUN
 var roll_finished = false
 
+var last_fps_time = 0
+var fps = 0
+var acc = 0
+
 func _ready():
 	animation_tree.active = true
-	
+
 func _physics_process(delta):
+	acc += delta
+	fps += 1
+	if acc > 1:
+		print("FPS: ", fps)
+		acc = 0
+		fps = 0
+		
 	match state:
 		RUN:	
 			run_state(delta)

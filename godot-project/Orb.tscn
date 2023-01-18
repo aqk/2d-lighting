@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/dungeon.png" type="Texture" id=1]
+[ext_resource path="res://assets/light.png" type="Texture" id=2]
 [ext_resource path="res://Orb.gd" type="Script" id=3]
 
 [sub_resource type="AtlasTexture" id=1]
@@ -50,3 +51,19 @@ amount = 4
 lifetime = 1.5
 local_coords = false
 process_material = SubResource( 4 )
+
+[node name="Light2D" type="Light2D" parent="."]
+texture = ExtResource( 2 )
+color = Color( 0.894118, 0.882353, 0.101961, 1 )
+shadow_enabled = true
+shadow_gradient_length = 3.0
+shadow_filter = 2
+shadow_filter_smooth = 50.2
+
+[node name="Light2D2" type="Light2D" parent="."]
+texture = ExtResource( 2 )
+color = Color( 0.894118, 0.882353, 0.101961, 1 )
+energy = 0.5
+shadow_gradient_length = 3.0
+shadow_filter = 2
+shadow_filter_smooth = 50.2

@@ -1,13 +1,18 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://assets/dungeon.png" type="Texture" id=1]
-[ext_resource path="res://ui/Sunnyside.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Orb.tscn" type="PackedScene" id=4]
 [ext_resource path="res://RotationBehavior.tscn" type="PackedScene" id=5]
 
+[sub_resource type="OccluderPolygon2D" id=4]
+polygon = PoolVector2Array( 16, 16, 0.132484, 16, 0.132484, 0.356796, 16, 0.356796 )
+
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
+
+[sub_resource type="OccluderPolygon2D" id=5]
+polygon = PoolVector2Array( 16, 0.170883, 0.244644, 0.170883, 0.244644, 8.47046, 16, 8.47046 )
 
 [sub_resource type="ConvexPolygonShape2D" id=2]
 points = PoolVector2Array( -0.159119, 0.637466, -0.159119, 0.314453, 16.1529, -0.00856018, 15.9914, 10.0048, -0.159119, 10.3278 )
@@ -20,6 +25,7 @@ points = PoolVector2Array( -0.159119, 0.637466, -0.159119, 0.314453, 16.1529, -0
 0/region = Rect2( 16, 16, 16, 16 )
 0/tile_mode = 0
 0/occluder_offset = Vector2( 0, 0 )
+0/occluder = SubResource( 4 )
 0/navigation_offset = Vector2( 0, 0 )
 0/shape_offset = Vector2( 0, 0 )
 0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
@@ -41,6 +47,7 @@ points = PoolVector2Array( -0.159119, 0.637466, -0.159119, 0.314453, 16.1529, -0
 1/region = Rect2( 16, 32, 16, 16 )
 1/tile_mode = 0
 1/occluder_offset = Vector2( 0, 0 )
+1/occluder = SubResource( 5 )
 1/navigation_offset = Vector2( 0, 0 )
 1/shape_offset = Vector2( 0, 0 )
 1/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
@@ -98,7 +105,7 @@ current = true
 remote_path = NodePath("../../../Camera2D")
 
 [node name="Orb2" parent="YSort" instance=ExtResource( 4 )]
-position = Vector2( 25.8529, 41.2946 )
+position = Vector2( -1, -15 )
 
 [node name="RotationBehavior" parent="YSort/Orb2" instance=ExtResource( 5 )]
 radius = 15.0
@@ -128,8 +135,6 @@ position = Vector2( 9.34519, 204.429 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Sunnyside" parent="CanvasLayer" instance=ExtResource( 2 )]
-margin_left = 241.0
-margin_top = -1.0
-margin_right = 281.0
-margin_bottom = 39.0
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+position = Vector2( 20, 11 )
+color = Color( 0.882353, 0.92549, 0.921569, 1 )

@@ -17,14 +17,12 @@ func _ready():
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	var player = $"../Player"
 	#var player = get_node("Player")
 	var d = player.position.distance_to(position)
 	# print(name, ":", d)
 	
-	
-
 	if d < dim_distance:
 		l1.energy = max_energy * (1 / (dim_distance - d))
 		l2.energy = max_energy * (1 / (dim_distance - d))

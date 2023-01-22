@@ -1,10 +1,18 @@
 extends KinematicBody2D
 
 export var MAX_SPEED = 150
+export var IDLE_CREEP = 30
 export var ACCEL = 8
 export var DECEL = 15
 export var STOP_DUR = 0.5
 export var REVERSE_DUR = 1.0
+export var TURN_TIGHTNESS = 100
+export var TURN_AGGRESSIVE = 40
+export var TURN_AGGRESSIVE_INC = 10
+export var ACCEL_HARD_DIFF = 10
+
+export var POSITION_TOO_FAR = 600
+export var POSITION_WARP_BACK = 1000
 
 var velocity = Vector2.ZERO
 var speed = 0
@@ -52,7 +60,7 @@ func read_input():
 		right = false
 
 func handle_input():		
-	speed_target = MAX_SPEED / 5
+	speed_target = IDLE_CREEP
 	if brake:
 		speed_target = 0
 	elif accel:
@@ -64,20 +72,20 @@ func handle_input():
 	
 	turn_target = 0
 	if left && !right:
-		turn_target = -100
+		turn_target = -TURN_TIGHTNESS
 	elif right && !left:
-		turn_target = 100
+		turn_target = TURN_TIGHTNESS
 
 func _process(delta):
 	read_input()
 	handle_input()
 
 func do_backup_physics():
-	if abs(turn_target - turn) > 40:
+	if abs(turn_target - turn) > TURN_AGGRESSIVE:
 		if turn_target > turn:
-			turn = turn + 10
+			turn = turn + TURN_AGGRESSIVE_INC
 		else:
-			turn = turn - 10
+			turn = turn - TURN_AGGRESSIVE_INC
 	else:
 		turn = (turn + turn_target) / 2
 
@@ -95,15 +103,15 @@ func do_backup_physics():
 		
 
 func do_normal_physics():
-	if abs(turn_target - turn) > 40:
+	if abs(turn_target - turn) > TURN_AGGRESSIVE:
 		if turn_target > turn:
-			turn = turn + 10
+			turn = turn + TURN_AGGRESSIVE_INC
 		else:
-			turn = turn - 10
+			turn = turn - TURN_AGGRESSIVE_INC
 	else:
 		turn = (turn + turn_target) / 2
 
-	if abs(speed_target - speed) > 10:
+	if abs(speed_target - speed) > ACCEL_HARD_DIFF:
 		if speed_target > speed:
 			speed += ACCEL
 		else:
@@ -145,5 +153,5 @@ func _physics_process(delta):
 		stop_timeout = STOP_DUR
 		reverse_timeout = STOP_DUR + REVERSE_DUR
 	
-	if position.x > 600:
-		position.x -= 1000
+	if position.x > POSITION_TOO_FAR:
+		position.x -= POSITION_WARP_BACK

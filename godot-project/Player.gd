@@ -145,5 +145,5 @@ func _physics_process(delta):
 		stop_timeout = STOP_DUR
 		reverse_timeout = STOP_DUR + REVERSE_DUR
 	
-	if position.x > 200:
-		position.x -= 400
+	if position.x > 600:
+		position.x -= 1000

@@ -13,6 +13,10 @@ var turn = 0
 var turn_target = 0
 var stop_timeout = 0
 var reverse_timeout = 0
+var brake = false
+var accel = false
+var left = false
+var right = false
 
 var last_fps_time = 0
 var fps = 0
@@ -26,25 +30,47 @@ func sigmoid(x):
 func _ready():
 	pass
 
-func _input(event):
-	turn_target = 0
-	
-	if event.is_action_pressed("brake"):
+func read_input():
+	if Input.is_action_just_pressed("brake"):
+		brake = true
+	if Input.is_action_just_released("brake"):
+		brake = false
+		
+	if Input.is_action_just_pressed("accel"):
+		accel = true
+	if Input.is_action_just_released("accel"):
+		accel = false
+		
+	if Input.is_action_just_pressed("left"):
+		left = true
+	if Input.is_action_just_released("left"):
+		left = false
+		
+	if Input.is_action_just_pressed("right"):
+		right = true
+	if Input.is_action_just_released("right"):
+		right = false
+
+func handle_input():		
+	speed_target = MAX_SPEED / 5
+	if brake:
 		speed_target = 0
-	elif event.is_action_pressed("accel"):
+	elif accel:
 		speed_target = MAX_SPEED
 		reverse_timeout = 0
 	else:
 		if speed_target > MAX_SPEED / 5:
 			speed_target = MAX_SPEED / 5
 	
-	if event.is_action_pressed("left"):
+	turn_target = 0
+	if left && !right:
 		turn_target = -100
-	elif event.is_action_pressed("right"):
+	elif right && !left:
 		turn_target = 100
 
 func _process(delta):
-	pass
+	read_input()
+	handle_input()
 
 func do_backup_physics():
 	if abs(turn_target - turn) > 40:

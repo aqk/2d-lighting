@@ -97,6 +97,7 @@ tile_data = PoolIntArray( -851990, 0, 0, -851989, 0, 0, -851988, 0, 0, -851987, 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( -294, -1 )
 current = true
+zoom = Vector2( 2, 2 )
 
 [node name="YSort" type="YSort" parent="."]
 

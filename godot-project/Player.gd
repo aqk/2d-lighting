@@ -1,14 +1,18 @@
 extends KinematicBody2D
 
-export var MAX_SPEED = 15
-export var ACCEL = 1
-export var DECEL = 3
+export var MAX_SPEED = 150
+export var ACCEL = 8
+export var DECEL = 15
+export var STOP_DUR = 0.5
+export var REVERSE_DUR = 1.0
 
 var velocity = Vector2.ZERO
 var speed = 0
 var speed_target = 0
 var turn = 0
 var turn_target = 0
+var stop_timeout = 0
+var reverse_timeout = 0
 
 var last_fps_time = 0
 var fps = 0
@@ -29,6 +33,7 @@ func _input(event):
 		speed_target = 0
 	elif event.is_action_pressed("accel"):
 		speed_target = MAX_SPEED
+		reverse_timeout = 0
 	else:
 		if speed_target > MAX_SPEED / 5:
 			speed_target = MAX_SPEED / 5
@@ -40,8 +45,30 @@ func _input(event):
 
 func _process(delta):
 	pass
+
+func do_backup_physics():
+	if abs(turn_target - turn) > 40:
+		if turn_target > turn:
+			turn = turn + 10
+		else:
+			turn = turn - 10
+	else:
+		turn = (turn + turn_target) / 2
+
+	speed = (speed - speed_target)	/ 2
+
+	var car_dir = turn / (pi * 100)
+	var car_cos = cos(car_dir)
+	var car_sin = sin(car_dir)
+	var new_velocity_x = car_cos * speed
+	var new_velocity_y = car_sin * speed
 	
-func _physics_process(delta):
+	var new_velocity = Vector2(new_velocity_x, new_velocity_y)
+	rotation = car_dir
+	return new_velocity
+		
+
+func do_normal_physics():
 	if abs(turn_target - turn) > 40:
 		if turn_target > turn:
 			turn = turn + 10
@@ -69,15 +96,28 @@ func _physics_process(delta):
 	var vel_diff = new_velocity - velocity
 	
 	# XXX If vel_diff is too large, skid
-	velocity = new_velocity
-	
 	rotation = car_dir
+	return new_velocity
 	
-	position.x += new_velocity_x
-	position.y += new_velocity_y
-	
-	$"CameraTransform".scale.x = speed / 30.0
-	$"CameraTransform".scale.y = speed / 30.0
+func _physics_process(delta):
+	if stop_timeout > 0:
+		stop_timeout -= delta
+		return
+		
+	var new_velocity = Vector2.ZERO
+	if reverse_timeout > 0:
+		reverse_timeout -= delta
+		speed = -ACCEL
+		new_velocity = do_backup_physics()
+	else:
+		new_velocity = do_normal_physics()
+		
+	velocity = new_velocity
 
+	var collision = move_and_collide(new_velocity * delta)	
+	if collision:
+		stop_timeout = STOP_DUR
+		reverse_timeout = STOP_DUR + REVERSE_DUR
+	
 	if position.x > 200:
 		position.x -= 400

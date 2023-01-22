@@ -1,10 +1,8 @@
 extends KinematicBody2D
 
-export var ACCELERATION = 450
-export var FRICTION = 550
-export var MAX_SPEED = 110
-export var ACCEL = 10
-export var DECEL = 10
+export var MAX_SPEED = 15
+export var ACCEL = 1
+export var DECEL = 3
 
 var velocity = Vector2.ZERO
 var speed = 0
@@ -25,15 +23,15 @@ func _ready():
 	pass
 
 func _input(event):
-	speed_target = speed
 	turn_target = 0
 	
 	if event.is_action_pressed("brake"):
 		speed_target = 0
-	elif event.is_action_pressed("jump"):
+	elif event.is_action_pressed("accel"):
 		speed_target = MAX_SPEED
 	else:
-		speed_target = MAX_SPEED / 5
+		if speed_target > MAX_SPEED / 5:
+			speed_target = MAX_SPEED / 5
 	
 	if event.is_action_pressed("left"):
 		turn_target = -100
@@ -52,16 +50,13 @@ func _physics_process(delta):
 	else:
 		turn = (turn + turn_target) / 2
 
-	if speed > speed_target:
-		if speed == 0:
-			speed = MAX_SPEED / 10
-		else:
+	if abs(speed_target - speed) > 10:
+		if speed_target > speed:
 			speed += ACCEL
-	if speed < speed_target:
-		if speed <= MAX_SPEED / 10:
-			speed = 0
 		else:
 			speed -= DECEL
+	else:
+		speed = speed_target
 
 	var car_dir = turn / (pi * 100)
 	var car_cos = cos(car_dir)
@@ -80,3 +75,6 @@ func _physics_process(delta):
 	
 	position.x += new_velocity_x
 	position.y += new_velocity_y
+	
+	$"CameraTransform".scale.x = speed / 30.0
+	$"CameraTransform".scale.y = speed / 30.0

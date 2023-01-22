@@ -78,3 +78,6 @@ func _physics_process(delta):
 	
 	$"CameraTransform".scale.x = speed / 30.0
 	$"CameraTransform".scale.y = speed / 30.0
+
+	if position.x > 200:
+		position.x -= 400

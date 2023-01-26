@@ -18,7 +18,7 @@ func _physics_process(delta):
 		secs = 0.0
 		dir *= -1
 	#var dir = (int(secs) % cycle_secs) - (cycle_secs)
-	print(delta, dir)
+	#print(delta, " ", dir)
 	move_direction = Vector2(0, -dir)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -26,3 +26,9 @@ func _process(_delta):
 	var movement = move_direction.normalized() * speed
 	#print(movement)
 	var _velocity = move_and_slide(movement)
+
+
+func _on_Area2D_body_entered(body):
+	if body.name == "Player":
+		print("Player hit Enemy!")
+	

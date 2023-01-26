@@ -179,3 +179,12 @@ position = Vector2( -318, 64 )
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 position = Vector2( 20, 11 )
 color = Color( 0.882353, 0.92549, 0.921569, 1 )
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_top = 266.0
+margin_right = 168.0
+margin_bottom = 306.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+text = "ROAD RASH"

@@ -27,8 +27,6 @@ func _process(_delta):
 	#print(movement)
 	var _velocity = move_and_slide(movement)
 
-
 func _on_Area2D_body_entered(body):
 	if body.name == "Player":
 		print("Player hit Enemy!")
-	

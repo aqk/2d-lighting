@@ -76,7 +76,7 @@ func handle_input():
 	elif right && !left:
 		turn_target = TURN_TIGHTNESS
 
-func _process(delta):
+func _process(_delta):
 	read_input()
 	handle_input()
 
@@ -127,7 +127,7 @@ func do_normal_physics():
 	var new_velocity_y = car_sin * speed
 	
 	var new_velocity = Vector2(new_velocity_x, new_velocity_y)
-	var vel_diff = new_velocity - velocity
+	var _vel_diff = new_velocity - velocity
 	
 	# XXX If vel_diff is too large, skid
 	rotation = car_dir

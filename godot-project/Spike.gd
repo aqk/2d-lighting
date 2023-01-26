@@ -22,7 +22,7 @@ func _physics_process(delta):
 	move_direction = Vector2(0, -dir)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	var movement = move_direction.normalized() * speed
 	#print(movement)
-	move_and_slide(movement)
+	var _velocity = move_and_slide(movement)

@@ -20,6 +20,8 @@ TURN_TIGHTNESS = 150
 TURN_AGGRESSIVE = 50
 TURN_AGGRESSIVE_INC = 15
 ACCEL_HARD_DIFF = 30
+POSITION_TOO_FAR = 800
+POSITION_WARP_BACK = 1400
 
 [node name="Sprite" type="Sprite" parent="."]
 scale = Vector2( -1, 1 )

@@ -1,10 +1,37 @@
 
+# Ideas
+
 NITRO!
-Sound
+Activate/deactivate headlights & brights
 Headlights useful for something? Scare away enemies?
 Limited energy for special abilities
-Activate brights
 Network play
 Bigger course
 Obstacles
+Explosions!
+Fuel Pumps
+Oil Slicks (ala Spy Hunter)
+Rain / Friction
+Bump mechanic (Bump-n-Jump)
+Camera control: Zoom out for higher speeds, so we can see where we are going
+
+# Sounds
+
+Car Horn
+Police Siren
+Fire Siren
+16 wheeler horn
+Ambiant Freeway
+Rain
+Splash
+Thud
+Speedbump (ca-chunk)
+Skid / Screech / Squeal
+Vroom Vroom
+Doppler Shift
+Radio Stations / MOD Player tunes
+
+# GFX
+
+Skid mark overlays
 

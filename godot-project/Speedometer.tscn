@@ -10,11 +10,11 @@ margin_top = 1.0
 margin_bottom = 1.0
 
 [node name="Speedometer" type="Sprite" parent="."]
-position = Vector2( 177, 90 )
+position = Vector2( 179, 79 )
 texture = ExtResource( 1 )
 
 [node name="Needle" type="Sprite" parent="."]
-position = Vector2( 177.397, 90.4882 )
+position = Vector2( 183, 86 )
 rotation = -2.0176
 texture = ExtResource( 2 )
 offset = Vector2( 1, -30 )

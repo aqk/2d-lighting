@@ -359,7 +359,8 @@ zoom = Vector2( 3, 3 )
 [node name="Player" parent="YSort" instance=ExtResource( 3 )]
 position = Vector2( -657, 0 )
 collision_mask = 6
-ACCEL = 200
+MAX_SPEED = 2000
+ACCEL = 20
 DECEL = 100
 
 [node name="CameraTransform" type="RemoteTransform2D" parent="YSort/Player"]

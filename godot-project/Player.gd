@@ -32,6 +32,8 @@ var acc = 0
 
 var pi = 3.141592653
 
+signal speed
+
 func sigmoid(x):
 	return 1.0 / (1.0 + exp(-x))
 
@@ -79,6 +81,7 @@ func handle_input():
 func _process(_delta):
 	read_input()
 	handle_input()
+	emit_signal("speed", speed)
 
 func do_backup_physics():
 	if abs(turn_target - turn) > TURN_AGGRESSIVE:
@@ -155,5 +158,3 @@ func _physics_process(delta):
 	
 	if position.x > POSITION_TOO_FAR:
 		position.x -= POSITION_WARP_BACK
-		
-	

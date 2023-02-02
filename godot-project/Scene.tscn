@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://assets/roads.png" type="Texture" id=1]
 [ext_resource path="res://Car.tscn" type="PackedScene" id=2]
@@ -334,9 +334,6 @@
 
 [node name="Scene" type="Node2D"]
 
-[node name="Speedometer" parent="." instance=ExtResource( 6 )]
-script = null
-
 [node name="Background" type="TileMap" parent="."]
 position = Vector2( 7.28389, 3.56763 )
 tile_set = SubResource( 3 )
@@ -361,6 +358,13 @@ current = true
 zoom = Vector2( 3, 3 )
 
 [node name="YSort" type="YSort" parent="."]
+
+[node name="Speedometer" parent="YSort" instance=ExtResource( 6 )]
+margin_left = -328.0
+margin_top = -271.0
+margin_right = -328.0
+margin_bottom = -271.0
+script = null
 
 [node name="Player" parent="YSort" instance=ExtResource( 3 )]
 position = Vector2( -657, 0 )

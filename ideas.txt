@@ -14,6 +14,10 @@ Oil Slicks (ala Spy Hunter)
 Rain / Friction
 Bump mechanic (Bump-n-Jump)
 Camera control: Zoom out for higher speeds, so we can see where we are going
+Shortcuts
+Ramps
+Boosters
+
 
 # Sounds
 

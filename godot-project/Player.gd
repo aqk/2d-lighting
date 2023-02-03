@@ -21,10 +21,15 @@ var turn = 0
 var turn_target = 0
 var stop_timeout = 0
 var reverse_timeout = 0
+
 var brake = false
 var accel = false
 var left = false
 var right = false
+
+# Sound State
+var playing_brake = false
+var playing_vroom = false
 
 var last_fps_time = 0
 var fps = 0
@@ -78,10 +83,26 @@ func handle_input():
 	elif right && !left:
 		turn_target = TURN_TIGHTNESS
 
+func handle_sound():
+	if brake == true and playing_brake == false:
+		playing_brake = true
+		$Braking.play(0.3)
+	if (brake == false and playing_brake == true) or speed < 40:
+		playing_brake = false
+		$Braking.stop()
+	if brake == true and accel == true and playing_vroom == false:
+		# TODO: Add timer before starting vroom
+		playing_vroom = true
+		$Vroom.play(0.4)
+	if playing_vroom and (brake == false or accel == false):
+		# TODO: Speed Boost when releasing a vroom, depending on how long held
+		playing_vroom = false
+		$Vroom.stop()
+		
 func _process(_delta):
 	read_input()
+	handle_sound()
 	handle_input()
-	emit_signal("speed", speed)
 
 func do_backup_physics():
 	if abs(turn_target - turn) > TURN_AGGRESSIVE:
@@ -158,3 +179,11 @@ func _physics_process(delta):
 	
 	if position.x > POSITION_TOO_FAR:
 		position.x -= POSITION_WARP_BACK
+		
+	
+
+
+func _on_Burnout_finished():
+	print("stopping ", name)
+	$Burnout.stop()
+	

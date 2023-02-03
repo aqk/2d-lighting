@@ -1,11 +1,24 @@
+Thanks to the hard work of others, we we able to create this for you!
+
+
 ## Tools
 
-Godot Team
+Godot
 Krita
 GIMP
 Emacs
+Handbrake
+FFMPEG
+Convertio.co
 
 
 ## Art
 https://opengameart.org/content/free-top-down-car-sprites-by-unlucky-studio
+
+## Sounds
+FreeSound
+Rutger Mueller
+Medartimus
+Robinhood76
+
 

@@ -17,6 +17,11 @@ Camera control: Zoom out for higher speeds, so we can see where we are going
 Shortcuts
 Ramps
 Boosters
+Inputting codes via horn and lights. eg. circling the blocks, blinking lights to open a garage door, or tip off someone that you are "the delivery guy"
+Speed impacted by terrain
+Cars with different stats
+Upgrades
+Tech Tree
 
 
 # Sounds
@@ -38,4 +43,26 @@ Radio Stations / MOD Player tunes
 # GFX
 
 Skid mark overlays
+
+
+Games
+
+Convoy
+FTL
+Delivery missions?
+
+
+Strategic
+Tactical
+Racing
+Upgrades
+
+
+# Decisions / Forkpoints
+
+* Can't add every feature / gameplay type ... or can we?
+* Constrained driving vs. Not - can have both on different levels / in different areas!
+
+
+
 

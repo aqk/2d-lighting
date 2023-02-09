@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/104026__rutgermuller__tires-squeaking.ogg-cb3e4b4c429ae9869ce87adb1ccfa119.oggstr"
+
+[deps]
+
+source_file="res://sounds/104026__rutgermuller__tires-squeaking.ogg"
+dest_files=[ "res://.import/104026__rutgermuller__tires-squeaking.ogg-cb3e4b4c429ae9869ce87adb1ccfa119.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

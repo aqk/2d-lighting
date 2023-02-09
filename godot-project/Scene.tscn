@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://city_roads.tres" type="TileSet" id=1]
 [ext_resource path="res://Car.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Speedometer.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Spike.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Speedometer.gd" type="Script" id=8]
+[ext_resource path="res://sounds/104026__rutgermuller__tires-squeaking.ogg" type="AudioStream" id=9]
 
 [sub_resource type="TileSet" id=4]
 
@@ -128,6 +129,9 @@ size_flags_stretch_ratio = 2.0
 text = "ROAD RASH"
 
 [node name="CanvasModulate2" type="CanvasModulate" parent="."]
+
+[node name="Burnout" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 9 )
 
 [node name="ResourcePreloader" type="ResourcePreloader" parent="."]
 

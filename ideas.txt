@@ -1,6 +1,20 @@
 
+
+# Mood
+
+Night Aesthetic
+
+
+# Inspirations
+
+Initial-D
+Cyberpunk
+
+
 # Ideas
 
+Shifting as a game mechanic
+Traction physics - oversteer at speed, drift ... (Fun, not realistic!)
 NITRO!
 Activate/deactivate headlights & brights
 Headlights useful for something? Scare away enemies?

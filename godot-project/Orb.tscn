@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://assets/dungeon.png" type="Texture" id=1]
-[ext_resource path="res://assets/light.png" type="Texture" id=2]
+[ext_resource path="res://assets/dungeon.png" type="Texture2D" id=1]
+[ext_resource path="res://assets/light.png" type="Texture2D" id=2]
 [ext_resource path="res://Orb.gd" type="Script" id=3]
 
 [sub_resource type="AtlasTexture" id=1]
@@ -14,7 +14,7 @@ _data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.161932, 1 ), 1.91598, 1.91
 [sub_resource type="CurveTexture" id=3]
 curve = SubResource( 2 )
 
-[sub_resource type="ParticlesMaterial" id=4]
+[sub_resource type="ParticleProcessMaterial" id=4]
 emission_shape = 1
 emission_sphere_radius = 3.0
 flag_disable_z = true
@@ -36,23 +36,23 @@ hue_variation_random = 1.0
 [node name="Orb" type="Node2D"]
 script = ExtResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource( 1 )
 
-[node name="AttachedParticles" type="Particles2D" parent="."]
+[node name="AttachedParticles" type="GPUParticles2D" parent="."]
 position = Vector2( -0.236233, -1.85051 )
 amount = 9
 lifetime = 1.5
 process_material = SubResource( 4 )
 
-[node name="DetachedParticles" type="Particles2D" parent="."]
+[node name="DetachedParticles" type="GPUParticles2D" parent="."]
 position = Vector2( -0.236233, -1.85051 )
 amount = 4
 lifetime = 1.5
 local_coords = false
 process_material = SubResource( 4 )
 
-[node name="Light2D" type="Light2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="."]
 texture = ExtResource( 2 )
 color = Color( 0.894118, 0.882353, 0.101961, 1 )
 shadow_enabled = true
@@ -60,7 +60,7 @@ shadow_gradient_length = 3.0
 shadow_filter = 2
 shadow_filter_smooth = 50.2
 
-[node name="Light2D2" type="Light2D" parent="."]
+[node name="Light2D2" type="PointLight2D" parent="."]
 texture = ExtResource( 2 )
 color = Color( 0.894118, 0.882353, 0.101961, 1 )
 energy = 0.5

@@ -1,7 +1,7 @@
 extends Node
 
-export(float) var radius = 18.0
-export(float) var speed = 5.1
+@export var radius: float = 18.0
+@export var speed: float = 5.1
 
 var rotation_vector = Vector2.ZERO
 var parent_pos = Vector2.ZERO

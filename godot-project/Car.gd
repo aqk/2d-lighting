@@ -1,18 +1,18 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
-export var MAX_SPEED = 150
-export var IDLE_CREEP = 30
-export var ACCEL = 8
-export var DECEL = 15
-export var STOP_DUR = 0.5
-export var REVERSE_DUR = 1.0
-export var TURN_TIGHTNESS = 100
-export var TURN_AGGRESSIVE = 40
-export var TURN_AGGRESSIVE_INC = 10
-export var ACCEL_HARD_DIFF = 10
+@export var MAX_SPEED = 150
+@export var IDLE_CREEP = 30
+@export var ACCEL = 8
+@export var DECEL = 15
+@export var STOP_DUR = 0.5
+@export var REVERSE_DUR = 1.0
+@export var TURN_TIGHTNESS = 100
+@export var TURN_AGGRESSIVE = 40
+@export var TURN_AGGRESSIVE_INC = 10
+@export var ACCEL_HARD_DIFF = 10
 
-export var POSITION_TOO_FAR = 600
-export var POSITION_WARP_BACK = 1000
+@export var POSITION_TOO_FAR = 600
+@export var POSITION_WARP_BACK = 1000
 
 var velocity = Vector2.ZERO
 var speed = 0

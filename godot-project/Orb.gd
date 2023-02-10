@@ -5,8 +5,8 @@ extends Node2D
 # var a = 2
 # var b = "text"
 
-onready var l1 = get_node("./Light2D")
-onready var l2 = get_node("./Light2D2")
+@onready var l1 = get_node("./PointLight2D")
+@onready var l2 = get_node("./Light2D2")
 
 var max_energy = 1
 var dim_distance = 50

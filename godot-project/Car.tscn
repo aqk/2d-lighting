@@ -1,22 +1,22 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=11 format=3]
 
-[ext_resource path="res://assets/Topdown_vehicle_sprites_pack/Police.png" type="Texture" id=1]
-[ext_resource path="res://assets/idle.png" type="Texture" id=2]
-[ext_resource path="res://PlayerCollision.gd" type="Script" id=3]
-[ext_resource path="res://assets/headlight.png" type="Texture" id=4]
-[ext_resource path="res://Player.gd" type="Script" id=5]
-[ext_resource path="res://sounds/104026__rutgermuller__tires-squeaking.ogg" type="AudioStream" id=6]
-[ext_resource path="res://sounds/217542__medartimus__car-breaking-skid-01.wav" type="AudioStream" id=7]
-[ext_resource path="res://sounds/335554__robinhood76__06332-speedy-car-drive-away.wav" type="AudioStream" id=8]
+[ext_resource type="Texture2D" path="res://assets/Topdown_vehicle_sprites_pack/Police.png" id="1"]
+[ext_resource type="Texture2D" path="res://assets/idle.png" id="2"]
+[ext_resource type="Script" path="res://PlayerCollision.gd" id="3"]
+[ext_resource type="Texture2D" path="res://assets/headlight.png" id="4"]
+[ext_resource type="Script" path="res://Player.gd" id="5"]
+[ext_resource type="AudioStream" uid="uid://bh74k4wyr484m" path="res://sounds/104026__rutgermuller__tires-squeaking.ogg" id="6"]
+[ext_resource type="AudioStream" path="res://sounds/217542__medartimus__car-breaking-skid-01.wav" id="7"]
+[ext_resource type="AudioStream" path="res://sounds/335554__robinhood76__06332-speedy-car-drive-away.wav" id="8"]
 
 [sub_resource type="CapsuleShape2D" id=45]
 radius = 17.0001
 height = 51.9999
 
 [sub_resource type="OccluderPolygon2D" id=46]
-polygon = PoolVector2Array( -5, 0, 5, 0, 0, 5 )
+polygon = PackedVector2Array( -5, 0, 5, 0, 0, 5 )
 
-[node name="Car" type="KinematicBody2D"]
+[node name="Car" type="CharacterBody2D"]
 script = ExtResource( 5 )
 MAX_SPEED = 200
 IDLE_CREEP = 50
@@ -27,7 +27,7 @@ ACCEL_HARD_DIFF = 30
 POSITION_TOO_FAR = 800
 POSITION_WARP_BACK = 1400
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2( -1, 1 )
 texture = ExtResource( 2 )
 hframes = 9
@@ -42,18 +42,18 @@ script = ExtResource( 3 )
 position = Vector2( -2, -2 )
 occluder = SubResource( 46 )
 
-[node name="PoliceCar" type="Sprite" parent="LightOccluder2D"]
+[node name="PoliceCar" type="Sprite2D" parent="LightOccluder2D"]
 position = Vector2( 3, 1 )
 rotation = 1.57135
 texture = ExtResource( 1 )
 
-[node name="LeftHeadlight" type="Light2D" parent="."]
+[node name="LeftHeadlight" type="PointLight2D" parent="."]
 position = Vector2( 96, -31 )
 texture = ExtResource( 4 )
 color = Color( 0.964706, 0.956863, 0.376471, 1 )
 energy = 3.0
 
-[node name="RightHeadlight" type="Light2D" parent="."]
+[node name="RightHeadlight" type="PointLight2D" parent="."]
 position = Vector2( 96, 21 )
 texture = ExtResource( 4 )
 color = Color( 0.964706, 0.956863, 0.376471, 1 )

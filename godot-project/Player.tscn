@@ -1,23 +1,26 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=11 format=3 uid="uid://xljor15tta1i"]
 
-[ext_resource path="res://assets/ferrari-daytona.png" type="Texture2D" id=1]
-[ext_resource path="res://assets/idle.png" type="Texture2D" id=2]
-[ext_resource path="res://PlayerCollision.gd" type="Script" id=3]
-[ext_resource path="res://assets/headlight.png" type="Texture2D" id=4]
-[ext_resource path="res://Player.gd" type="Script" id=5]
-[ext_resource path="res://sounds/104026__rutgermuller__tires-squeaking.ogg" type="AudioStream" id=6]
-[ext_resource path="res://sounds/217542__medartimus__car-breaking-skid-01.wav" type="AudioStream" id=7]
-[ext_resource path="res://sounds/335554__robinhood76__06332-speedy-car-drive-away.wav" type="AudioStream" id=8]
+[ext_resource type="Texture2D" uid="uid://uk0fn0u74kme" path="res://assets/ferrari-daytona.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://dufkm2jya76oo" path="res://assets/idle.png" id="2"]
+[ext_resource type="Script" path="res://PlayerCollision.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://dsslgy1q6sbtx" path="res://assets/headlight.png" id="4"]
+[ext_resource type="Script" path="res://Player.gd" id="5"]
 
-[sub_resource type="CapsuleShape2D" id=45]
+[sub_resource type="CapsuleShape2D" id="45"]
 radius = 17.0001
 height = 51.9999
 
-[sub_resource type="OccluderPolygon2D" id=46]
-polygon = PackedVector2Array( -5, 0, 5, 0, 0, 5 )
+[sub_resource type="OccluderPolygon2D" id="46"]
+polygon = PackedVector2Array(-5, 0, 5, 0, 0, 5)
+
+[sub_resource type="AudioStreamOggVorbis" id="AudioStreamOggVorbis_tcyts"]
+
+[sub_resource type="AudioStreamWAV" id="AudioStreamWAV_uv2sd"]
+
+[sub_resource type="AudioStreamWAV" id="AudioStreamWAV_ltuvx"]
 
 [node name="Player" type="CharacterBody2D"]
-script = ExtResource( 5 )
+script = ExtResource("5")
 MAX_SPEED = 200
 IDLE_CREEP = 50
 TURN_TIGHTNESS = 150
@@ -28,46 +31,41 @@ POSITION_TOO_FAR = 800
 POSITION_WARP_BACK = 1400
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2( -1, 1 )
-texture = ExtResource( 2 )
+scale = Vector2(-1, 1)
+texture = ExtResource("2")
 hframes = 9
 
 [node name="PlayerCollision" type="CollisionShape2D" parent="."]
-position = Vector2( -1, 0 )
+position = Vector2(-1, 0)
 rotation = -1.5708
-shape = SubResource( 45 )
-script = ExtResource( 3 )
+shape = SubResource("45")
+script = ExtResource("3")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]
-position = Vector2( -2, -2 )
-occluder = SubResource( 46 )
+position = Vector2(-2, -2)
+occluder = SubResource("46")
 
 [node name="Ferrari-daytona" type="Sprite2D" parent="LightOccluder2D"]
-position = Vector2( 3, 1 )
-texture = ExtResource( 1 )
-__meta__ = {
-"_edit_lock_": true
-}
+position = Vector2(3, 1)
+texture = ExtResource("1")
 
 [node name="LeftHeadlight" type="PointLight2D" parent="."]
-position = Vector2( 40, -15 )
-texture = ExtResource( 4 )
-color = Color( 0.964706, 0.956863, 0.376471, 1 )
+position = Vector2(40, -15)
+color = Color(0.964706, 0.956863, 0.376471, 1)
 energy = 3.0
+texture = ExtResource("4")
 
 [node name="RightHeadlight" type="PointLight2D" parent="."]
-position = Vector2( 42, 17 )
-texture = ExtResource( 4 )
-color = Color( 0.964706, 0.956863, 0.376471, 1 )
+position = Vector2(42, 17)
+color = Color(0.964706, 0.956863, 0.376471, 1)
 energy = 3.0
+texture = ExtResource("4")
 
 [node name="Burnout" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource( 6 )
-
-[node name="Braking" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource( 7 )
+stream = SubResource("AudioStreamOggVorbis_tcyts")
 
 [node name="Vroom" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource( 8 )
+stream = SubResource("AudioStreamWAV_uv2sd")
 
-[connection signal="finished" from="Burnout" to="." method="_on_Burnout_finished"]
+[node name="Braking" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamWAV_ltuvx")

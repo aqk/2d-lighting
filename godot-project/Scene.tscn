@@ -1,16 +1,14 @@
-[gd_scene load_steps=11 format=3 uid="uid://dg00xo4m71bkg"]
+[gd_scene load_steps=10 format=3 uid="uid://cbhrmg5o8xq0x"]
 
 [ext_resource type="TileSet" path="res://city_roads.tres" id="1"]
 [ext_resource type="PackedScene" uid="uid://cp7ntrmqc1qke" path="res://Car.tscn" id="2"]
-[ext_resource type="PackedScene" path="res://Player.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://xljor15tta1i" path="res://Player.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://Orb.tscn" id="4"]
+[ext_resource type="Script" path="res://Car.gd" id="4_tre1j"]
 [ext_resource type="PackedScene" path="res://RotationBehavior.tscn" id="5"]
 [ext_resource type="PackedScene" path="res://Speedometer.tscn" id="6"]
 [ext_resource type="PackedScene" path="res://Spike.tscn" id="7"]
 [ext_resource type="Script" path="res://Speedometer.gd" id="8"]
-[ext_resource type="AudioStream" uid="uid://bh74k4wyr484m" path="res://sounds/104026__rutgermuller__tires-squeaking.ogg" id="9"]
-
-[sub_resource type="TileSet" id="4"]
 
 [node name="Scene" type="Node2D"]
 
@@ -38,6 +36,15 @@ DECEL = 100
 remote_path = NodePath("../../../Camera2D")
 
 [node name="Car" parent="Node2D" instance=ExtResource("2")]
+script = ExtResource("4_tre1j")
+MAX_SPEED = 150
+IDLE_CREEP = 30
+TURN_TIGHTNESS = 100
+TURN_AGGRESSIVE = 40
+TURN_AGGRESSIVE_INC = 10
+ACCEL_HARD_DIFF = 10
+POSITION_TOO_FAR = 600
+POSITION_WARP_BACK = 1000
 
 [node name="Orb2" parent="Node2D" instance=ExtResource("4")]
 position = Vector2(-1, -15)
@@ -110,10 +117,3 @@ size_flags_stretch_ratio = 2.0
 text = "ROAD RASH"
 
 [node name="Burnout" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("9")
-
-[node name="ResourcePreloader" type="ResourcePreloader" parent="."]
-
-[node name="Rightward City Street" type="TileMap" parent="ResourcePreloader"]
-tile_set = SubResource("4")
-format = 2

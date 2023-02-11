@@ -1,11 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://cp7ntrmqc1qke"]
+[gd_scene load_steps=8 format=3 uid="uid://cp7ntrmqc1qke"]
 
 [ext_resource type="Script" path="res://PlayerCollision.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://0lrsig0wt3t1" path="res://assets/Topdown_vehicle_sprites_pack/Police.png" id="3_usjtg"]
 [ext_resource type="Texture2D" uid="uid://dsslgy1q6sbtx" path="res://assets/headlight.png" id="3_xbhva"]
 [ext_resource type="Script" path="res://Player.gd" id="5"]
-[ext_resource type="AudioStream" uid="uid://bh74k4wyr484m" path="res://sounds/104026__rutgermuller__tires-squeaking.ogg" id="6"]
-[ext_resource type="AudioStream" uid="uid://dqk4gwp4ffgu2" path="res://sounds/217542__medartimus__car-breaking-skid-01.wav" id="7"]
-[ext_resource type="AudioStream" uid="uid://dvdc2ymo4c8cm" path="res://sounds/335554__robinhood76__06332-speedy-car-drive-away.wav" id="8"]
 
 [sub_resource type="CapsuleShape2D" id="45"]
 radius = 17.0001
@@ -13,6 +11,8 @@ height = 51.9999
 
 [sub_resource type="OccluderPolygon2D" id="46"]
 polygon = PackedVector2Array(-5, 0, 5, 0, 0, 5)
+
+[sub_resource type="AudioStreamOggVorbis" id="AudioStreamOggVorbis_57477"]
 
 [node name="Car" type="CharacterBody2D"]
 script = ExtResource("5")
@@ -42,6 +42,7 @@ occluder = SubResource("46")
 [node name="PoliceCar" type="Sprite2D" parent="LightOccluder2D"]
 position = Vector2(3, 1)
 rotation = 1.57135
+texture = ExtResource("3_usjtg")
 
 [node name="LeftHeadlight" type="PointLight2D" parent="."]
 position = Vector2(96, -31)
@@ -56,12 +57,6 @@ energy = 3.0
 texture = ExtResource("3_xbhva")
 
 [node name="Burnout" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("6")
+stream = SubResource("AudioStreamOggVorbis_57477")
 
-[node name="Braking" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("7")
-
-[node name="Vroom" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("8")
-
-[connection signal="finished" from="Burnout" to="." method="_on_Burnout_finished"]
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]

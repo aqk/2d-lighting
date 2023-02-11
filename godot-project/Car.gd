@@ -14,7 +14,6 @@ extends CharacterBody2D
 @export var POSITION_TOO_FAR = 600
 @export var POSITION_WARP_BACK = 1000
 
-var velocity = Vector2.ZERO
 var speed = 0
 var speed_target = 0
 var turn = 0
@@ -36,7 +35,7 @@ func sigmoid(x):
 	return 1.0 / (1.0 + exp(-x))
 
 func _ready():
-	pass
+	velocity = Vector2.ZERO
 
 func read_input():
 	if Input.is_action_just_pressed("brake"):

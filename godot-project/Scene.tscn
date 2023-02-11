@@ -42,7 +42,7 @@ DECEL = 100
 [node name="CameraTransform" type="RemoteTransform2D" parent="YSort/Player"]
 remote_path = NodePath("../../../Camera2D")
 
-[node name="Car" parent="YSort" instance=ExtResource( 2 )]
+[node name="PoliceCar" parent="YSort" instance=ExtResource( 2 )]
 
 [node name="Orb2" parent="YSort" instance=ExtResource( 4 )]
 position = Vector2( -1, -15 )

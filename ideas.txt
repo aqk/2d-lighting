@@ -13,6 +13,9 @@ Night Aesthetic
 Initial-D
 Cyberpunk
 
+# TODO
+
+pause menu / options / controls
 
 # Ideas
 

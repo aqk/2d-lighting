@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://city_roads.tres" type="TileSet" id=1]
 [ext_resource path="res://Car.tscn" type="PackedScene" id=2]
@@ -115,13 +115,14 @@ position = Vector2( -280, -88 )
 [node name="Spike3" parent="YSort" instance=ExtResource( 7 )]
 position = Vector2( -318, 64 )
 
-[node name="RedOilBarrel2" type="Sprite" parent="YSort"]
-position = Vector2( -670, -177 )
-scale = Vector2( 4, 4 )
-texture = ExtResource( 13 )
-
 [node name="RedOilBarrel" type="Sprite" parent="YSort"]
 position = Vector2( -674, 167 )
+scale = Vector2( 4, 4 )
+z_index = 1
+texture = ExtResource( 13 )
+
+[node name="RedOilBarrel2" type="Sprite" parent="YSort"]
+position = Vector2( -670, -177 )
 scale = Vector2( 4, 4 )
 texture = ExtResource( 13 )
 

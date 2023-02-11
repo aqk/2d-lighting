@@ -37,7 +37,7 @@ var acc = 0
 
 var pi = 3.141592653
 
-signal speed
+signal car_speed
 
 func sigmoid(x):
 	return 1.0 / (1.0 + exp(-x))
@@ -103,6 +103,7 @@ func _process(_delta):
 	read_input()
 	handle_sound()
 	handle_input()
+	emit_signal("car_speed", speed)
 
 func do_backup_physics():
 	if abs(turn_target - turn) > TURN_AGGRESSIVE:

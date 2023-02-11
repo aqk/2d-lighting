@@ -52,6 +52,7 @@ DECEL = 100
 remote_path = NodePath("../../../Camera2D")
 
 [node name="PoliceCar" parent="YSort" instance=ExtResource( 2 )]
+position = Vector2( -959, -164 )
 z_index = 1
 
 [node name="Orb2" parent="YSort" instance=ExtResource( 4 )]
@@ -116,7 +117,7 @@ position = Vector2( -280, -88 )
 position = Vector2( -318, 64 )
 
 [node name="RedOilBarrel" type="Sprite" parent="YSort"]
-position = Vector2( -674, 167 )
+position = Vector2( 840, 146 )
 scale = Vector2( 4, 4 )
 z_index = 1
 texture = ExtResource( 13 )

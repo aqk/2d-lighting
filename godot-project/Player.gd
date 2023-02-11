@@ -38,6 +38,7 @@ var acc = 0
 var pi = 3.141592653
 
 signal car_speed
+signal car_position
 
 func sigmoid(x):
 	return 1.0 / (1.0 + exp(-x))
@@ -104,6 +105,7 @@ func _process(_delta):
 	handle_sound()
 	handle_input()
 	emit_signal("car_speed", speed)
+	emit_signal("car_position", position)
 
 func do_backup_physics():
 	if abs(turn_target - turn) > TURN_AGGRESSIVE:
@@ -177,12 +179,6 @@ func _physics_process(delta):
 	if collision:
 		stop_timeout = STOP_DUR
 		reverse_timeout = STOP_DUR + REVERSE_DUR
-	
-	if position.x > POSITION_TOO_FAR:
-		position.x -= POSITION_WARP_BACK
-		
-	
-
 
 func _on_Burnout_finished():
 	print("stopping ", name)

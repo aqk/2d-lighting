@@ -1,4 +1,7 @@
 
+# Tools
+
+Upgrade to Godot 4
 
 # Mood
 
@@ -10,6 +13,9 @@ Night Aesthetic
 Initial-D
 Cyberpunk
 
+# TODO
+
+pause menu / options / controls
 
 # Ideas
 

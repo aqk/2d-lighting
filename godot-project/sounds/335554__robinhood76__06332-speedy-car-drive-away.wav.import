@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/335554__robinhood76__06332-speedy-car-drive-away.wav-f7432aed2563ee101e75c4fe5bce024a.sample"
+type="AudioStreamWAV"
+uid="uid://dvdc2ymo4c8cm"
+path="res://.godot/imported/335554__robinhood76__06332-speedy-car-drive-away.wav-f7432aed2563ee101e75c4fe5bce024a.sample"
 
 [deps]
 
 source_file="res://sounds/335554__robinhood76__06332-speedy-car-drive-away.wav"
-dest_files=[ "res://.import/335554__robinhood76__06332-speedy-car-drive-away.wav-f7432aed2563ee101e75c4fe5bce024a.sample" ]
+dest_files=["res://.godot/imported/335554__robinhood76__06332-speedy-car-drive-away.wav-f7432aed2563ee101e75c4fe5bce024a.sample"]
 
 [params]
 

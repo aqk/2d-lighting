@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/217542__medartimus__car-breaking-skid-01.wav-78938e1a2a3937f9f61008258a51315e.sample"
+type="AudioStreamWAV"
+uid="uid://dqk4gwp4ffgu2"
+path="res://.godot/imported/217542__medartimus__car-breaking-skid-01.wav-78938e1a2a3937f9f61008258a51315e.sample"
 
 [deps]
 
 source_file="res://sounds/217542__medartimus__car-breaking-skid-01.wav"
-dest_files=[ "res://.import/217542__medartimus__car-breaking-skid-01.wav-78938e1a2a3937f9f61008258a51315e.sample" ]
+dest_files=["res://.godot/imported/217542__medartimus__car-breaking-skid-01.wav-78938e1a2a3937f9f61008258a51315e.sample"]
 
 [params]
 

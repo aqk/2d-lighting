@@ -11,10 +11,21 @@ func _ready():
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+var show_menu = true
 
+func toggle_show():
+	show_menu = !show_menu
+	if show_menu:
+		self.show()
+	else:
+		self.hide()
+	print(show_menu)
+
+
+func _input(event):
+	if event.is_action_pressed("ui_cancel"):
+		toggle_show()
+		
 
 func _on_StartButton_pressed():
 	# When / if we have levels

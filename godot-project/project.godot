@@ -18,6 +18,10 @@ config/name="Tutorial: 2D Lighting"
 run/main_scene="res://Scene.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Global="*res://Global.gd"
+
 [display]
 
 window/size/width=484

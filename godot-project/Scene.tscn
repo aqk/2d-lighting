@@ -122,8 +122,8 @@ margin_bottom = 123.0
 script = ExtResource( 12 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Menu"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_right = 82.0
+margin_bottom = 92.0
 
 [node name="StartButton" type="Button" parent="CanvasLayer/Menu/VBoxContainer"]
 margin_right = 82.0
@@ -135,6 +135,59 @@ margin_top = 24.0
 margin_right = 82.0
 margin_bottom = 44.0
 text = "Controls"
+
+[node name="PopupDialog" type="PopupDialog" parent="CanvasLayer/Menu/VBoxContainer/ControlsButton"]
+visible = true
+margin_left = 160.0
+margin_top = 80.0
+margin_right = 400.0
+margin_bottom = 240.0
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="Controls Header" type="RichTextLabel" parent="CanvasLayer/Menu/VBoxContainer/ControlsButton/PopupDialog"]
+margin_left = 72.0
+margin_top = 9.0
+margin_right = 150.0
+margin_bottom = 24.0
+text = "Controls"
+
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/Menu/VBoxContainer/ControlsButton/PopupDialog"]
+margin_top = 35.0
+margin_right = 204.0
+margin_bottom = 175.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
+columns = 2
+
+[node name="SteerLeft" type="RichTextLabel" parent="CanvasLayer/Menu/VBoxContainer/ControlsButton/PopupDialog/GridContainer"]
+margin_right = 100.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 100, 15 )
+text = "Steer Left [ ]"
+
+[node name="SteerRight" type="RichTextLabel" parent="CanvasLayer/Menu/VBoxContainer/ControlsButton/PopupDialog/GridContainer"]
+margin_left = 104.0
+margin_right = 204.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 100, 15 )
+text = "Steer Right [ ]"
+
+[node name="Accelerate" type="RichTextLabel" parent="CanvasLayer/Menu/VBoxContainer/ControlsButton/PopupDialog/GridContainer"]
+margin_top = 19.0
+margin_right = 100.0
+margin_bottom = 34.0
+rect_min_size = Vector2( 100, 15 )
+text = "Accelerate [ ]"
+
+[node name="Brake" type="RichTextLabel" parent="CanvasLayer/Menu/VBoxContainer/ControlsButton/PopupDialog/GridContainer"]
+margin_left = 104.0
+margin_top = 19.0
+margin_right = 204.0
+margin_bottom = 34.0
+rect_min_size = Vector2( 100, 15 )
+text = "Brake [ ]"
 
 [node name="OptionsButton" type="Button" parent="CanvasLayer/Menu/VBoxContainer"]
 margin_top = 48.0
@@ -173,4 +226,5 @@ text = "ROAD RASH"
 stream = ExtResource( 9 )
 
 [connection signal="pressed" from="CanvasLayer/Menu/VBoxContainer/StartButton" to="CanvasLayer/Menu" method="_on_StartButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/Menu/VBoxContainer/ControlsButton" to="CanvasLayer/Menu" method="_on_ControlsButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/VBoxContainer/QuitButton" to="CanvasLayer/Menu" method="_on_QuitButton_pressed"]

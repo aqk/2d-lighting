@@ -7,6 +7,9 @@ export var DECEL = 15
 export var STOP_DUR = 0.5
 export var REVERSE_DUR = 1.0
 export var TURN_TIGHTNESS = 100
+# TURN_INCREMENT is bogus, because if depends on physics calc interval
+# Turn radius also doesn't depend on movement (car can turn like a tank)
+export var TURN_INCREMENT = 5
 export var TURN_AGGRESSIVE = 40
 export var TURN_AGGRESSIVE_INC = 10
 export var ACCEL_HARD_DIFF = 10
@@ -14,9 +17,12 @@ export var ACCEL_HARD_DIFF = 10
 export var POSITION_TOO_FAR = 600
 export var POSITION_WARP_BACK = 1000
 
+
+var lock_steering = false
 var velocity = Vector2.ZERO
 var speed = 0
 var speed_target = 0
+# turn and turn_target are absolute angles, not relative
 var turn = 0
 var turn_target = 0
 var stop_timeout = 0
@@ -77,12 +83,19 @@ func handle_input():
 	else:
 		if speed_target > MAX_SPEED / 5:
 			speed_target = MAX_SPEED / 5
-	
-	turn_target = 0
-	if left && !right:
-		turn_target = -TURN_TIGHTNESS
-	elif right && !left:
-		turn_target = TURN_TIGHTNESS
+
+	if lock_steering:
+		turn_target = 0
+		if left && !right:
+			turn_target = -TURN_TIGHTNESS
+		elif right && !left:
+			turn_target = TURN_TIGHTNESS
+	else:
+		if left && !right:
+			turn_target -= TURN_INCREMENT
+		elif right && !left:
+			turn_target += TURN_INCREMENT
+
 
 func handle_sound():
 	if brake == true and playing_brake == false:

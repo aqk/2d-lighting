@@ -3,6 +3,7 @@ extends Control
 
 func _ready():
 	Global.push_ui(self)
+	$VBoxContainer/StartButton.grab_focus()
 
 
 func toggle_show_menu():
@@ -10,6 +11,7 @@ func toggle_show_menu():
 		Global.pop_ui()
 	else:
 		Global.push_ui(self)
+		$VBoxContainer/StartButton.grab_focus()
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):

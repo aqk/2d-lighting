@@ -59,6 +59,8 @@ let sqr (x : float) = x *. x
 let point_valid (pd : poisson_disc) (p : fpoint) : bool =
   let cell_coords = get_cell_coords pd p in
   let mindist_at = pd.mindist_fun pd p in
+  let mindist_ot = pd.mindist_fun pd p in
+  let mindist = max mindist_at mindist_ot in
   let neighbors = get_neighbors pd cell_coords in
   List.fold_left
     (fun res idx ->
@@ -67,7 +69,7 @@ let point_valid (pd : poisson_disc) (p : fpoint) : bool =
          | None -> res
          | Some nearby_pt ->
            let distance2 = sqr (nearby_pt.x -. p.x) +. sqr (nearby_pt.y -. p.y) in
-           if distance2 < mindist_at then
+           if distance2 < mindist then
              false
            else
              res
@@ -87,7 +89,8 @@ let get_point (pd : poisson_disc) (p : fpoint) : fpoint option =
       i := (!i) + 1
   in
   while (!result) = None && (!i) < pd.k do
-    let random_rho = pd.mindist +. ((random ()) *. 3.0 *. pd.mindist) in
+    let mindist_at = pd.mindist_fun pd p in
+    let random_rho = mindist_at +. ((random ()) *. 3.0 *. mindist_at) in
     let rho = sqrt random_rho in
     let theta = random () *. 2.0 *. pi in
     let pt: fpoint = {x = p.x +. rho *. cos theta ; y = p.y +. rho *. sin theta} in

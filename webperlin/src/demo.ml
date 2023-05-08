@@ -33,10 +33,10 @@ type encType =
   | Pulsar
 
 type model =
-  { scale : int
-  ; time : float
+  { time : float
   ; pixels : int array
   ; pause : bool
+  ; pn : float array
   ; sp : scatter_process
   }
 
@@ -53,20 +53,26 @@ let init () =
   let imageData =
     Array.init (4 * canvas_x * canvas_y) (fun i -> if i mod 4 == 3 then 255 else 8)
   in
-  ({ scale = 8
-   ; time = 0.0
+  let pn = Perlin.generateNoise (canvas_x / pn_factor) (canvas_y / pn_factor) in
+  let nearness pd pt =
+    let int_coord = get_cell_coords pd pt in
+    let noise_at = pn.(int_coord.y / pn_factor * (canvas_x / pn_factor) + int_coord.x / pn_factor) in
+    pd.mindist *. 1.0 +. (7.0 *. pd.mindist *. noise_at)
+  in
+  ({ time = 0.0
    ; pixels = imageData
    ; pause = false
+   ; pn = pn
    ; sp = start_scatter_points
        {
          cells = IPointMap.empty ;
          samples = IntMap.empty ;
-         width = 64 ;
-         height = 64 ;
-         k = 5 ;
-         a = 4.0 ;
-         mindist = 2.0 ;
-         mindist_fun = (fun pd fp -> pd.mindist) ;
+         width = canvas_x ;
+         height = canvas_y ;
+         k = 2 ;
+         a = 1.0 ;
+         mindist = 4.0 ;
+         mindist_fun = nearness ;
          sample_idx = 0
        }
    }, NoCmd)
@@ -87,17 +93,32 @@ let setPixel ia off (color : color) =
     ia.(off + 3) <- color.a
   end
 
+let lowResAvg splist n ia =
+  let converged = Array.init ((canvas_x / n) * (canvas_y / n)) (fun _ -> 0) in
+  let _ = List.iter
+    (fun (p : fpoint) ->
+      let ipt = { x = int_of_float p.x / n ; y = int_of_float p.y / n } in
+      let off = ipt.y * canvas_x / n + ipt.x in
+      converged.(off) <- converged.(off) + 15
+    )
+    splist
+  in
+  converged
+
 let drawGame model (ia : int array) =
   begin
+    let splist = get_scatter_points model.sp in
+    let converged_scale = 8 in
+    let converged = lowResAvg splist converged_scale ia in
     for i = 0 to canvas_y - 1 do
       let off_i = canvas_x * 4 * i in
       for j = 0 to canvas_x - 1 do
         let off = off_i + (4 * j) in
-        setPixel ia off seaColor
+        setPixel ia off {seaColor with r = int_of_float (255.0 *. model.pn.(i / pn_factor * canvas_x / pn_factor + j / pn_factor)) ; g = converged.(i / converged_scale * canvas_x / converged_scale + j / converged_scale)}
       done
     done ;
     begin
-      (get_scatter_points model.sp)
+      splist
       |> List.iter
         (fun (p : fpoint) ->
            let ipt = { x = int_of_float p.x ; y = int_of_float p.y } in
@@ -177,7 +198,7 @@ let view model =
         [ id "demo-canvas"
         ; width canvas_x
         ; height canvas_y
-        ; style ("position: relative; transform: translate(400%,400%) scale(" ^ (string_of_int model.scale) ^ ");")
+        ; style "position: relative; width: 100vh; height: 100vh;"
         ] []
     ]
 

@@ -1,0 +1,18 @@
+{
+  "name": "lowrez",
+  "version": "0.1.0",
+    "sources": ["src"],
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true
+  },
+  "suffix": ".bs.js",
+  "bs-dependencies": [
+      // add your bs-dependencies here
+      "bucklescript-tea"
+  ],
+  "warnings": {
+    "error" : "+101"
+  },
+  "refmt": 3
+}

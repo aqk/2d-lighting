@@ -15,7 +15,7 @@ class PoissonDisc:
         coords_list = [(ix, iy) for ix in range(self.width) for iy in range(self.height)]
         self.cells = {coords: None for coords in coords_list}
         self.samples = None
-    
+
     def get_cell_coords(self,pt):
         return int(pt[0] // self.a), int(pt[1] // self.a)
 
@@ -97,4 +97,4 @@ class PoissonDisc:
                 # from the list of "active" points.
                 active.remove(idx)
 
-        return filter(lambda x: x is not None, self.cells.items())
+        return filter(lambda x: x[1] is not None, self.cells.items())

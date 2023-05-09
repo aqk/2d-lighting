@@ -6,8 +6,8 @@ open Constants
 
 type run_phase =
   | Accumulate of (float array * scatter_process)
-  | Distribute of (int * fpoint array)
-  | Connect of (ipoint array)
+  | Distribute of (int * float array * fpoint array)
+  | Connect of (float array * ipoint array)
 
 let dot_of (p : fpoint) =
   { x = int_of_float p.x ; y = int_of_float p.y }
@@ -128,18 +128,42 @@ let moveTowardRoads width height road_array =
   let sorted = sort_by_dist_to road_array locus in
   close_in_midpoint sorted (min 7 len)
 
-let update_state = function
+let start_state () =
+  let pn = Perlin.generateNoise (canvas_x / pn_factor) (canvas_y / pn_factor) in
+  let nearness pd pt =
+    let int_coord = get_cell_coords pd pt in
+    let noise_at = pn.(int_coord.y / pn_factor * (canvas_x / pn_factor) + int_coord.x / pn_factor) in
+    pd.mindist *. 1.0 +. (7.0 *. pd.mindist *. noise_at)
+  in
+  Accumulate
+    ( pn
+    , start_scatter_points
+        {
+          cells = IPointMap.empty ;
+          samples = IntMap.empty ;
+          width = canvas_x ;
+          height = canvas_y ;
+          k = 2 ;
+          a = 1.0 ;
+          mindist = 4.0 ;
+          mindist_fun = nearness ;
+          sample_idx = 0
+        }
+    )
+
+let update_state st =
+  match st with
   | Accumulate (pn, sp) ->
     begin
       match scatter_point sp with
-      | None -> Distribute (0, (Array.of_list (get_scatter_points sp)))
+      | None -> Distribute (0, pn, (Array.of_list (get_scatter_points sp)))
       | Some sp -> Accumulate (pn, sp)
     end
-  | Distribute (dr_iters, dr) ->
+  | Distribute (dr_iters, pn, dr) ->
     if dr_iters < 5000 then
-      Distribute (dr_iters + 1, moveTowardRoads canvas_x canvas_y dr)
+      Distribute (dr_iters + 1, pn, moveTowardRoads canvas_x canvas_y dr)
     else
-      Connect (Array.map dot_of dr)
+      Connect (pn, Array.map dot_of dr)
   | Connect x -> Connect x
 
 let show_points splist ia =
@@ -150,21 +174,30 @@ let show_points splist ia =
        setPixel ia off whiteColor
     )
 
+let show_perlin_noise pn ia =
+  for i = 0 to canvas_y - 1 do
+    let off_i = canvas_x * 4 * i in
+    for j = 0 to canvas_x - 1 do
+      let off = off_i + (4 * j) in
+      setPixel ia off {seaColor with r = int_of_float (255.0 *. pn.(i / pn_factor * canvas_x / pn_factor + j / pn_factor)) ; g = 0}
+    done
+  done
+
 let show_model state ia =
   match state with
   | Accumulate (pn, sp) ->
     begin
-      let converged_scale = 4 in
       let splist = List (List.map dot_of (get_scatter_points sp)) in
-      let converged = lowResAvg splist converged_scale ia in
-      for i = 0 to canvas_y - 1 do
-        let off_i = canvas_x * 4 * i in
-        for j = 0 to canvas_x - 1 do
-          let off = off_i + (4 * j) in
-          setPixel ia off {seaColor with r = int_of_float (255.0 *. pn.(i / pn_factor * canvas_x / pn_factor + j / pn_factor)) ; g = converged.(i / converged_scale * canvas_x / converged_scale + j / converged_scale)}
-        done
-      done ;
+      show_perlin_noise pn ia ;
       show_points splist ia
     end
-  | Distribute (_, dr) -> show_points (Array (Array.map dot_of dr)) ia
-  | Connect ipa -> show_points (Array ipa) ia
+  | Distribute (_, pn, dr) ->
+    begin
+      show_perlin_noise pn ia ;
+      show_points (Array (Array.map dot_of dr)) ia
+    end
+  | Connect (pn, ipa) ->
+    begin
+      show_perlin_noise pn ia ;
+      show_points (Array ipa) ia
+    end

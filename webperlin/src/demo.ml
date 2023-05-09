@@ -31,7 +31,6 @@ type msg =
 
 type model =
   { time : float
-  ; pixels : int array
   ; pause : bool
   ; state : run_phase
   }
@@ -48,36 +47,14 @@ let init () =
   let imageData =
     Array.init (4 * canvas_x * canvas_y) (fun i -> if i mod 4 == 3 then 255 else 8)
   in
-  let pn = Perlin.generateNoise (canvas_x / pn_factor) (canvas_y / pn_factor) in
-  let nearness pd pt =
-    let int_coord = get_cell_coords pd pt in
-    let noise_at = pn.(int_coord.y / pn_factor * (canvas_x / pn_factor) + int_coord.x / pn_factor) in
-    pd.mindist *. 1.0 +. (7.0 *. pd.mindist *. noise_at)
-  in
   ({ time = 0.0
-   ; pixels = imageData
    ; pause = false
-   ; state =
-       Accumulate
-         ( pn
-         , start_scatter_points
-             {
-               cells = IPointMap.empty ;
-               samples = IntMap.empty ;
-               width = canvas_x ;
-               height = canvas_y ;
-               k = 2 ;
-               a = 1.0 ;
-               mindist = 4.0 ;
-               mindist_fun = nearness ;
-               sample_idx = 0
-             }
-         )
+   ; state = start_state ()
    }, NoCmd)
 
 let drawGame model (ia : int array) =
   begin
-    show_model model.state ;
+    let _ = show_model model.state ia in
     if model.pause then
       drawText whiteColor 1 1 0 "pause" ia
     else
@@ -109,13 +86,18 @@ let update model = function (* These should be simple enough to be self-explanat
     | None -> (model, NoCmd)
     | Some c2d ->
       begin
-        let new_state = update_state model.state in
         let imageData = createImageData c2d canvas_x canvas_y in
         let ia = imageDataArray imageData in
-        setImageSmoothingEnabled c2d false ;
-        drawGame model ia ;
-        putImageData c2d imageData 0 0 ;
-        ({ model with time = t +. model.time ; state = new_state }, NoCmd)
+        let _ = setImageSmoothingEnabled c2d false in
+        let new_model =
+          { model with
+            time = t +. model.time
+          ; state = update_state model.state
+          }
+        in
+        let _ = drawGame new_model ia in
+        let _ = putImageData c2d imageData 0 0 in
+        (new_model, NoCmd)
       end
 
 let width n = attribute "" "width" (string_of_int n)

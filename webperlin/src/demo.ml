@@ -28,9 +28,14 @@ type msg =
   | Tick of (string * float) (* Time tick *)
   [@@bs.deriving {accessors}] (* This is a nice quality-of-life addon from Bucklescript, it will generate function names for each constructor name, optional, but nice to cut down on code, this is unused in this example but good to have regardless *)
 
+type run_phase =
+  | Accumulate of (float array * scatter_process)
+  | Distribute of (int * fpoint array)
+  | Connect of (ipoint array)
+
 type list_container =
-  | List of fpoint list
-  | Array of fpoint array
+  | List of ipoint list
+  | Array of ipoint array
 
 let list_iterate f = function
   | List l -> List.iter f l
@@ -40,10 +45,7 @@ type model =
   { time : float
   ; pixels : int array
   ; pause : bool
-  ; pn : float array
-  ; sp : scatter_process
-  ; dr_iters : int
-  ; dr : fpoint array option
+  ; state : run_phase
   }
 
 let color_lookup = ListToCharMap.go [('x', rgba 0 120 0 255)]
@@ -68,21 +70,22 @@ let init () =
   ({ time = 0.0
    ; pixels = imageData
    ; pause = false
-   ; pn = pn
-   ; sp = start_scatter_points
-       {
-         cells = IPointMap.empty ;
-         samples = IntMap.empty ;
-         width = canvas_x ;
-         height = canvas_y ;
-         k = 2 ;
-         a = 1.0 ;
-         mindist = 4.0 ;
-         mindist_fun = nearness ;
-         sample_idx = 0
-       }
-   ; dr = None
-   ; dr_iters = 0
+   ; state =
+       Accumulate
+         ( pn
+         , start_scatter_points
+             {
+               cells = IPointMap.empty ;
+               samples = IntMap.empty ;
+               width = canvas_x ;
+               height = canvas_y ;
+               k = 2 ;
+               a = 1.0 ;
+               mindist = 4.0 ;
+               mindist_fun = nearness ;
+               sample_idx = 0
+             }
+         )
    }, NoCmd)
 
 let whiteColor = rgba 0xff 0xff 0xff 255
@@ -99,8 +102,8 @@ let setPixel ia off (color : color) =
 let lowResAvg splist n ia =
   let converged = Array.init ((canvas_x / n) * (canvas_y / n)) (fun _ -> 0) in
   let _ = list_iterate
-    (fun (p : fpoint) ->
-      let ipt = { x = int_of_float p.x / n ; y = int_of_float p.y / n } in
+    (fun (p : ipoint) ->
+      let ipt = { x = p.x / n ; y = p.y / n } in
       let off = ipt.y * canvas_x / n + ipt.x in
       converged.(off) <- converged.(off) + 15
     )
@@ -167,39 +170,104 @@ let moveTowardRoads width height road_array =
   let sorted = sort_by_dist_to road_array locus in
   close_in_midpoint sorted (min 7 len)
 
+let map_set (f : ipoint -> ipoint) (ips : IPointSet.t) : IPointSet.t =
+  IPointSet.fold
+    (fun e s -> IPointSet.union s (IPointSet.singleton (f e)))
+    ips
+    IPointSet.empty
+
+let capture_set pset =
+  let neighbors = [(-1,0);(1,0);(0,1);(0,-1)] in
+  List.fold_left
+    (fun s (x,y) ->
+       IPointSet.union s (map_set (fun v -> {x = v.x + x; y = v.y + y}) s)
+    )
+    pset
+    neighbors
+
+let isolate_island c road_array =
+  let pset = capture_set (IPointSet.singleton (Array.get road_array c)) in
+  let rec isolate_inner pset remaining =
+    let (found_points, remaining_points) =
+      List.partition
+        (fun v -> IPointSet.mem v pset)
+        remaining
+    in
+    match found_points with
+    | [] -> (pset, remaining_points)
+    | _ ->
+      let new_point_capture_set =
+        List.fold_left
+          (fun s v -> IPointSet.union s (capture_set (IPointSet.singleton v)))
+          pset
+          found_points
+      in
+      isolate_inner new_point_capture_set remaining_points
+  in
+  isolate_inner pset (Array.to_list road_array)
+
+let rec make_islands islands road_array =
+  let rlen = Array.length road_array in
+  if rlen == 0 then
+    islands
+  else
+    let c = 0 in
+    let (new_island, remaining_roads) = isolate_island c road_array in
+    make_islands ((IPointSet.elements new_island) :: islands) (Array.of_list remaining_roads)
+
 let dot_of (p : fpoint) =
   { x = int_of_float p.x ; y = int_of_float p.y }
 
 let drawGame model (ia : int array) =
   begin
-    let splist =
-      match model.dr with
-      | Some dr -> Array dr
-      | None -> List (get_scatter_points model.sp)
-    in
-    let converged_scale = 4 in
-    let converged = lowResAvg splist converged_scale ia in
-    for i = 0 to canvas_y - 1 do
-      let off_i = canvas_x * 4 * i in
-      for j = 0 to canvas_x - 1 do
-        let off = off_i + (4 * j) in
-        setPixel ia off {seaColor with r = int_of_float (255.0 *. model.pn.(i / pn_factor * canvas_x / pn_factor + j / pn_factor)) ; g = converged.(i / converged_scale * canvas_x / converged_scale + j / converged_scale)}
-      done
-    done ;
-    begin
+    let show_points splist =
       splist
       |> list_iterate
-        (fun (p : fpoint) ->
-           let ipt = dot_of p in
+        (fun (ipt : ipoint) ->
            let off = (ipt.y * canvas_x + ipt.x) * 4 in
            setPixel ia off whiteColor
         )
-    end ;
+    in
+    let show_model () =
+      match model.state with
+      | Accumulate (pn, sp) ->
+        begin
+          let converged_scale = 4 in
+          let splist = List (List.map dot_of (get_scatter_points sp)) in
+          let converged = lowResAvg splist converged_scale ia in
+          for i = 0 to canvas_y - 1 do
+            let off_i = canvas_x * 4 * i in
+            for j = 0 to canvas_x - 1 do
+              let off = off_i + (4 * j) in
+              setPixel ia off {seaColor with r = int_of_float (255.0 *. pn.(i / pn_factor * canvas_x / pn_factor + j / pn_factor)) ; g = converged.(i / converged_scale * canvas_x / converged_scale + j / converged_scale)}
+            done
+          done ;
+          show_points splist
+        end
+      | Distribute (_, dr) -> show_points (Array (Array.map dot_of dr))
+      | Connect ipa -> show_points (Array ipa)
+    in
+    show_model () ;
     if model.pause then
       drawText whiteColor 1 1 0 "pause" ia
     else
       drawText whiteColor 1 1 0 "run" ia
+
   end
+
+let update_state = function
+  | Accumulate (pn, sp) ->
+    begin
+      match scatter_point sp with
+      | None -> Distribute (0, (Array.of_list (get_scatter_points sp)))
+      | Some sp -> Accumulate (pn, sp)
+    end
+  | Distribute (dr_iters, dr) ->
+    if dr_iters < 5000 then
+      Distribute (dr_iters + 1, moveTowardRoads canvas_x canvas_y dr)
+    else
+      Connect (Array.map dot_of dr)
+  | Connect x -> Connect x
 
 (* This is the central message handler, it takes the model as the first argument *)
 let update model = function (* These should be simple enough to be self-explanatory, mutate the model based on the message, easy to read and follow *)
@@ -225,33 +293,13 @@ let update model = function (* These should be simple enough to be self-explanat
     | None -> (model, NoCmd)
     | Some c2d ->
       begin
-        let (draw_roads, updated_sp) =
-          match model.dr with
-          | Some dr -> (Some dr, model.sp)
-          | None ->
-            match scatter_point model.sp with
-            | None -> (Some (Array.of_list (get_scatter_points model.sp)), model.sp)
-            | Some sp -> (None, sp)
-        in
+        let new_state = update_state model.state in
         let imageData = createImageData c2d canvas_x canvas_y in
         let ia = imageDataArray imageData in
-        let new_roads =
-          if model.pause then
-            draw_roads
-          else if model.dr_iters < 5000 then
-            optionMap (moveTowardRoads canvas_x canvas_y) draw_roads
-          else
-            model.dr
-        in
-        let dr_iters =
-          match new_roads with
-          | None -> model.dr_iters
-          | Some _ -> model.dr_iters + 1
-        in
         setImageSmoothingEnabled c2d false ;
         drawGame model ia ;
         putImageData c2d imageData 0 0 ;
-        ({ model with time = t +. model.time ; sp = updated_sp ; dr = new_roads ; dr_iters = dr_iters }, NoCmd)
+        ({ model with time = t +. model.time ; state = new_state }, NoCmd)
       end
 
 let width n = attribute "" "width" (string_of_int n)

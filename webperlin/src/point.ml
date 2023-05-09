@@ -29,6 +29,7 @@ module FPoint3Ord = struct
 end
 
 module IPointMap = Map.Make(IPointOrd)
+module IPointSet = Set.Make(IPointOrd)
 module IPoint3Map = Map.Make(IPoint3Ord)
 module IPointFind = FindMap(IPointOrd)
 module IPointUpdate = UpdateMap(IPointOrd)

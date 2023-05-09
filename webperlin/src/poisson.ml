@@ -54,8 +54,6 @@ let get_neighbors (pd : poisson_disc) (p : ipoint) : int list =
 let get_cell_coords (pd : poisson_disc) (p : fpoint) : ipoint =
   { x = int_of_float (p.x /. pd.a) ; y = int_of_float (p.y /. pd.a) }
 
-let sqr (x : float) = x *. x
-
 let point_valid (pd : poisson_disc) (p : fpoint) : bool =
   let cell_coords = get_cell_coords pd p in
   let mindist_at = pd.mindist_fun pd p in

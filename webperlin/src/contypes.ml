@@ -47,3 +47,9 @@ module IntUpdate = UpdateMap(IntOrd)
 let random : unit -> float = [%bs.raw {| function(x) { return Math.random(); } |} ]
 let pi = 3.141592653
 let choice : int -> int = [%bs.raw {| function(choices) { return Math.floor(Math.random() * choices); } |} ]
+
+let optionMap f = function
+  | None -> None
+  | Some p -> Some (f p)
+
+let sqr (x : float) = x *. x

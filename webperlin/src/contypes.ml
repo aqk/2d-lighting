@@ -53,3 +53,12 @@ let optionMap f = function
   | Some p -> Some (f p)
 
 let sqr (x : float) = x *. x
+
+type 'a list_container =
+  | List of 'a list
+  | Array of 'a array
+
+let list_iterate f = function
+  | List l -> List.iter f l
+  | Array l -> Array.iter f l
+

@@ -42,6 +42,7 @@ type model =
   ; pause : bool
   ; pn : float array
   ; sp : scatter_process
+  ; dr_iters : int
   ; dr : fpoint array option
   }
 
@@ -81,6 +82,7 @@ let init () =
          sample_idx = 0
        }
    ; dr = None
+   ; dr_iters = 0
    }, NoCmd)
 
 let whiteColor = rgba 0xff 0xff 0xff 255
@@ -125,7 +127,7 @@ let make_clustered array =
 
 let dist (p1 : fpoint) (p2 : fpoint) =
   let dx = p1.x -. p2.x in
-  let dy = p2.y -. p2.y in
+  let dy = p1.y -. p2.y in
   sqrt ((sqr dx) +. (sqr dy))
 
 let sort_by_dist_to array mid =
@@ -165,6 +167,9 @@ let moveTowardRoads width height road_array =
   let sorted = sort_by_dist_to road_array locus in
   close_in_midpoint sorted (min 7 len)
 
+let dot_of (p : fpoint) =
+  { x = int_of_float p.x ; y = int_of_float p.y }
+
 let drawGame model (ia : int array) =
   begin
     let splist =
@@ -185,7 +190,7 @@ let drawGame model (ia : int array) =
       splist
       |> list_iterate
         (fun (p : fpoint) ->
-           let ipt = { x = int_of_float p.x ; y = int_of_float p.y } in
+           let ipt = dot_of p in
            let off = (ipt.y * canvas_x + ipt.x) * 4 in
            setPixel ia off whiteColor
         )
@@ -233,14 +238,20 @@ let update model = function (* These should be simple enough to be self-explanat
         let new_roads =
           if model.pause then
             draw_roads
-          else
+          else if model.dr_iters < 5000 then
             optionMap (moveTowardRoads canvas_x canvas_y) draw_roads
-
+          else
+            model.dr
+        in
+        let dr_iters =
+          match new_roads with
+          | None -> model.dr_iters
+          | Some _ -> model.dr_iters + 1
         in
         setImageSmoothingEnabled c2d false ;
         drawGame model ia ;
         putImageData c2d imageData 0 0 ;
-        ({ model with time = t +. model.time ; sp = updated_sp ; dr = new_roads }, NoCmd)
+        ({ model with time = t +. model.time ; sp = updated_sp ; dr = new_roads ; dr_iters = dr_iters }, NoCmd)
       end
 
 let width n = attribute "" "width" (string_of_int n)

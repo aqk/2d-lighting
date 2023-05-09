@@ -4,10 +4,15 @@ open Point
 open Poisson
 open Constants
 
+type islands =
+  { remaining_points: ipoint list
+  ; islands: ipoint list list
+  }
+
 type run_phase =
   | Accumulate of (float array * scatter_process)
   | Distribute of (int * float array * fpoint array)
-  | Connect of (float array * ipoint array)
+  | Connect of (float array * islands)
 
 let dot_of (p : fpoint) =
   { x = int_of_float p.x ; y = int_of_float p.y }
@@ -19,7 +24,7 @@ let map_set (f : ipoint -> ipoint) (ips : IPointSet.t) : IPointSet.t =
     IPointSet.empty
 
 let capture_set pset =
-  let neighbors = [(-1,0);(1,0);(0,1);(0,-1)] in
+  let neighbors = [(-1,0);(1,0);(0,1);(0,-1);(-1,-1);(-1,1);(1,-1);(1,1)] in
   List.fold_left
     (fun s (x,y) ->
        IPointSet.union s (map_set (fun v -> {x = v.x + x; y = v.y + y}) s)
@@ -27,35 +32,33 @@ let capture_set pset =
     pset
     neighbors
 
-let isolate_island c road_array =
-  let pset = capture_set (IPointSet.singleton (Array.get road_array c)) in
-  let rec isolate_inner pset remaining =
-    let (found_points, remaining_points) =
-      List.partition
-        (fun v -> IPointSet.mem v pset)
-        remaining
+(* Given a point from points (ipoint array), collect all points that are adjacent
+   to point.
+ *)
+let make_island points =
+  match points with
+  | [] -> None
+  | pt :: _ ->
+    let hull =
+      List.fold_left
+        (fun cset pt ->
+           if IPointSet.mem pt cset then
+             IPointSet.union (capture_set (IPointSet.singleton pt)) cset
+           else
+             cset
+        )
+        (capture_set (IPointSet.singleton pt))
+        points
     in
-    match found_points with
-    | [] -> (pset, remaining_points)
-    | _ ->
-      let new_point_capture_set =
-        List.fold_left
-          (fun s v -> IPointSet.union s (capture_set (IPointSet.singleton v)))
-          pset
-          found_points
-      in
-      isolate_inner new_point_capture_set remaining_points
-  in
-  isolate_inner pset (Array.to_list road_array)
+    Some (List.partition (fun pt -> IPointSet.mem pt hull) points)
 
-let rec make_islands islands road_array =
-  let rlen = Array.length road_array in
-  if rlen == 0 then
-    islands
-  else
-    let c = 0 in
-    let (new_island, remaining_roads) = isolate_island c road_array in
-    make_islands ((IPointSet.elements new_island) :: islands) (Array.of_list remaining_roads)
+let update_connected islands =
+  match make_island islands.remaining_points with
+  | Some (new_island, remaining_points) ->
+    { remaining_points
+    ; islands = new_island :: islands.islands
+    }
+  | None -> islands
 
 let lowResAvg splist n ia =
   let converged = Array.init ((canvas_x / n) * (canvas_y / n)) (fun _ -> 0) in
@@ -160,18 +163,32 @@ let update_state st =
       | Some sp -> Accumulate (pn, sp)
     end
   | Distribute (dr_iters, pn, dr) ->
-    if dr_iters < 5000 then
-      Distribute (dr_iters + 1, pn, moveTowardRoads canvas_x canvas_y dr)
+    if dr_iters < 1000 then
+      let new_roads =
+        dr
+        |> moveTowardRoads canvas_x canvas_y
+        |> moveTowardRoads canvas_x canvas_y
+        |> moveTowardRoads canvas_x canvas_y
+        |> moveTowardRoads canvas_x canvas_y
+        |> moveTowardRoads canvas_x canvas_y
+      in
+      Distribute (dr_iters + 1, pn, new_roads)
     else
-      Connect (pn, Array.map dot_of dr)
-  | Connect x -> Connect x
+      Connect
+        ( pn
+        , { islands = []
+          ; remaining_points = Array.map dot_of dr |> Array.to_list
+          }
+        )
+  | Connect (pn, islands) ->
+    Connect (pn, update_connected islands)
 
-let show_points splist ia =
+let show_points color splist ia =
   splist
   |> list_iterate
     (fun (ipt : ipoint) ->
        let off = (ipt.y * canvas_x + ipt.x) * 4 in
-       setPixel ia off whiteColor
+       setPixel ia off color
     )
 
 let show_perlin_noise pn ia =
@@ -189,15 +206,23 @@ let show_model state ia =
     begin
       let splist = List (List.map dot_of (get_scatter_points sp)) in
       show_perlin_noise pn ia ;
-      show_points splist ia
+      show_points whiteColor splist ia
     end
   | Distribute (_, pn, dr) ->
     begin
       show_perlin_noise pn ia ;
-      show_points (Array (Array.map dot_of dr)) ia
+      show_points whiteColor (Array (Array.map dot_of dr)) ia
     end
-  | Connect (pn, ipa) ->
+  | Connect (pn, islands) ->
     begin
       show_perlin_noise pn ia ;
-      show_points (Array ipa) ia
+      show_points whiteColor (List islands.remaining_points) ia ;
+      List.iter
+        (fun island ->
+           show_points
+             { whiteColor with r = 5 * List.length island }
+             (List island)
+             ia
+        )
+        islands.islands
     end

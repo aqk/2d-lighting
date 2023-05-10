@@ -56,6 +56,7 @@ func server_start_game() -> void:
 	for client in player_info:
 		rpc_id(client, "client_start_game")
 	var game_scene = start_game()
+	assert(get_tree().get_network_unique_id() == 1)
 	for ch in game_scene.get_children():
 		if ch.name == "ball":
 			ch.connect("ball_state", self, "_send_ball_state")

@@ -15,7 +15,7 @@ func _input(event):
 		emit_signal("mouse_pos", event.global_position.y)
 	
 func set_server_mouse_pos(y):
-	$Paddle2.position.y = y
+	$Paddle.position.y = y
 	
 func set_client_mouse_pos(y):
 	$Paddle2.position.y = y

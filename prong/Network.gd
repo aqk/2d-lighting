@@ -58,12 +58,15 @@ func set_up_upnp() -> void:
 	pass
 
 func host_game(host_online = true) -> void:
+	print_debug("Ran host game")
 	if host_online:
 		set_up_upnp()
 		var err = upnp.add_port_mapping(server_port)
 		if err != upnp.UPNP_RESULT_SUCCESS:
 			push_error("Could not port forward: Error code: %s" % server_port)
+	peer.set_bind_ip("0.0.0.0")
 	var error = peer.create_server(server_port)
+	get_tree().network_peer = peer
 	if error == ERR_ALREADY_IN_USE:
 		print_debug("Port %s occupied. Server already exists?", server_port)
 	connection_count += 1

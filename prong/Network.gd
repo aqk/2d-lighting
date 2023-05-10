@@ -48,21 +48,22 @@ func _connect_signals():
 func server_start_game() -> void:
 	for client in player_info:
 		rpc_id(client, "client_start_game")
-	start_game()
+	var game_scene = start_game()
+	for ch in game_scene.get_children():
+		if ch.name == "ball":
+			ch.connect("ball_state", self, "_send_ball_state")
 
 func _send_ball_state(velocity, position):
 	for user in player_info:
 		rpc_id(user, "set_ball_state", velocity, position)
 
-func start_game() -> void:
+func start_game() -> Node:
 	emit_signal("game_started")
 	$"../../Menu".visible = false
 	var game_scene = load("res://game.tscn").instance()
 	$"../../".add_child(game_scene)
 	game_scene.name = "game"
-	for ch in game_scene.get_children():
-		if ch.name == "ball":
-			ch.connect("ball_state", self, "_send_ball_state")
+	return game_scene
 
 func join_game() -> void:
 	#print_debug("Joining game with %s:%s" % (ip_address, server_port))

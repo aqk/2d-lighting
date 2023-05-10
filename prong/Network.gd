@@ -4,7 +4,7 @@ signal game_started
 
 var server_port = 25555
 export var ip_address = '127.0.0.1'
-export var player_name = "Fred"
+export var player_name = ""
 
 var peer := NetworkedMultiplayerENet.new()
 var player_info = {}

@@ -79,11 +79,11 @@ func host_game(host_online = true) -> void:
 func _on_network_peer_connected(player_id) -> void:
 	print_debug("Player Connected: %s" % player_id)
 	var my_player_info = {
-		"player_id": get_tree().get_unique_id(),
+		"player_id": get_tree().get_network_unique_id(),
 		"player_name": "Fred"
 	}
 	
-	if get_tree().get_unique_id() == 1:
+	if get_tree().get_network_unique_id() == 1:
 		$"../VBoxContainer/Start".disabled = false
 	
 	# Send OUR player_info TO the new player, player_id

@@ -85,8 +85,7 @@ func start_game() -> Node:
 	return game_scene
 
 func join_game() -> void:
-	#print_debug("Joining game with %s:%s" % (ip_address, server_port))
-	print_debug("Joining game with %s" % ip_address)
+	print_debug("Joining game with %s:%s" % [ip_address, server_port])
 	peer.create_client(ip_address, server_port)
 	get_tree().network_peer = peer
 	is_server = false
@@ -105,7 +104,7 @@ func host_game(host_online = true) -> void:
 	var error = peer.create_server(server_port)
 	get_tree().network_peer = peer
 	if error == ERR_ALREADY_IN_USE:
-		print_debug("Port %s occupied. Server already exists?", server_port)
+		print_debug("Port %s occupied. Server already exists?" % server_port)
 	connection_count += 1
 
 

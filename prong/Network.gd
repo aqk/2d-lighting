@@ -56,8 +56,12 @@ func _send_ball_state(velocity, position):
 
 func start_game() -> void:
 	emit_signal("game_started")
-	get_tree().change_scene("res://game.tscn")
-	$Ball.connect("ball_state", self, "_send_ball_state")
+	$"../../Menu".visible = false
+	var game_scene = load("res://game.tscn").instance()
+	$"../../".add_child(game_scene)
+	for ch in game_scene.get_children():
+		if ch.name == "ball":
+			ch.connect("ball_state", self, "_send_ball_state")
 
 func join_game() -> void:
 	#print_debug("Joining game with %s:%s" % (ip_address, server_port))

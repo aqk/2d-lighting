@@ -25,9 +25,16 @@ remote func client_start_game() -> void:
 	if get_tree().get_rpc_sender_id() != 1:
 		return
 	start_game()
+	$"../../game/".connect("mouse_pos", self, "_client_mouse_pos")
 	
 remote func set_ball_state(velocity, position):
 	$"../../game/ball".set_ball_state(velocity, position)
+
+remote func set_client_paddle(y):
+	$"../../game".set_client_mouse_pos(y)
+
+remote func set_server_paddle(y):
+	$"../../game".set_server_mouse_pos(y)
 	
 #    -------------  LOCAL CODE
 # Called when the node enters the scene tree for the first time.
@@ -52,6 +59,17 @@ func server_start_game() -> void:
 	for ch in game_scene.get_children():
 		if ch.name == "ball":
 			ch.connect("ball_state", self, "_send_ball_state")
+		game_scene.connect("mouse_pos", self, "_send_server_mouse_pos")			
+
+func _send_server_mouse_pos(y):
+	for user in player_info:
+		rpc_id(user, "set_server_paddle", y)
+	$"../../game".set_server_mouse_pos(y)
+
+func _client_mouse_pos(y):
+	for user in player_info:
+		rpc_id(user, "set_client_paddle", y)
+	$"../../game".set_client_mouse_pos(y)
 
 func _send_ball_state(velocity, position):
 	for user in player_info:

@@ -50,6 +50,8 @@ func start_game() -> void:
 	get_tree().change_scene("res://game.tscn")
 
 func join_game() -> void:
+	#print_debug("Joining game with %s:%s" % (ip_address, server_port))
+	print_debug("Joining game with %s" % ip_address)
 	peer.create_client(ip_address, server_port)
 	get_tree().network_peer = peer
 	is_server = false

@@ -27,7 +27,7 @@ remote func client_start_game() -> void:
 	start_game()
 	
 remote func set_ball_state(velocity, position):
-	$Ball.set_ball_state(velocity, position)
+	$"../../game/ball".set_ball_state(velocity, position)
 	
 #    -------------  LOCAL CODE
 # Called when the node enters the scene tree for the first time.
@@ -59,6 +59,7 @@ func start_game() -> void:
 	$"../../Menu".visible = false
 	var game_scene = load("res://game.tscn").instance()
 	$"../../".add_child(game_scene)
+	game_scene.name = "game"
 	for ch in game_scene.get_children():
 		if ch.name == "ball":
 			ch.connect("ball_state", self, "_send_ball_state")

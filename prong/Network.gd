@@ -4,6 +4,7 @@ signal game_started
 
 var server_port = 25555
 export var ip_address = '127.0.0.1'
+export var player_name = "Fred"
 
 var peer := NetworkedMultiplayerENet.new()
 var player_info = {}
@@ -89,7 +90,7 @@ func _on_network_peer_connected(player_id) -> void:
 	print_debug("Player Connected: %s" % player_id)
 	var my_player_info = {
 		"player_id": get_tree().get_network_unique_id(),
-		"player_name": "Fred"
+		"player_name": player_name
 	}
 	
 	if get_tree().get_network_unique_id() == 1:

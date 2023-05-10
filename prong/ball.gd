@@ -1,5 +1,6 @@
 extends Node2D
 
+signal ball_state(velocity, position)
 
 # Declare member variables here. Examples:
 # var a = 2
@@ -21,3 +22,8 @@ func _physics_process(delta):
 	var collision = $KinematicBody2D.move_and_collide(velocity*delta)
 	if collision:
 		velocity = velocity.bounce(collision.normal)
+	emit_signal("ball_state", velocity, position)
+
+func set_ball_state(vel, pos):
+	velocity = vel
+	position = pos

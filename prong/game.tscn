@@ -56,5 +56,3 @@ position = Vector2( 483, 266 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4"]
 position = Vector2( 0, 282 )
 shape = SubResource( 4 )
-
-[editable path="ball"]

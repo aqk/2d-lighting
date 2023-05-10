@@ -26,6 +26,9 @@ remote func client_start_game() -> void:
 		return
 	start_game()
 	
+remote func set_ball_state(velocity, position):
+	$Ball.set_ball_state(velocity, position)
+	
 #    -------------  LOCAL CODE
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -45,10 +48,16 @@ func _connect_signals():
 func server_start_game() -> void:
 	for client in player_info:
 		rpc_id(client, "client_start_game")
+	start_game()
+
+func _send_ball_state(velocity, position):
+	for user in player_info:
+		rpc_id(user, "set_ball_state", velocity, position)
 
 func start_game() -> void:
 	emit_signal("game_started")
 	get_tree().change_scene("res://game.tscn")
+	$Ball.connect("ball_state", self, "_send_ball_state")
 
 func join_game() -> void:
 	#print_debug("Joining game with %s:%s" % (ip_address, server_port))

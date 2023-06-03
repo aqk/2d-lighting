@@ -12,6 +12,11 @@
       )
 )
 
+(defn rect-center [rect]
+      {:x (+ (get rect :x) (/ (get rect :width) 2))
+       :y (+ (get rect :y) (/ (get rect :height) 2))}
+)
+
 ; circles are {:pos :radius}
 ; (is-within-circle {:x 10 :y 10} {:pos {:x 11 :y 11} :radius 1}) => false
 ; (is-within-circle {:x 10 :y 10} {:pos {:x 11 :y 11} :radius 2}) => true

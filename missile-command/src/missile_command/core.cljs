@@ -17,10 +17,11 @@
           1000
           (fn my-task []
             (let [cc (canvas-context)]
+              (println cc)
               (canvas/color-fill cc "#327")
-              (canvas/clear cc 0 0 800 600)
+              (canvas/rect cc 0 0 800 600)
+              (canvas/fill cc)
               )
-            (println "Hello world!")
             )
           )
 

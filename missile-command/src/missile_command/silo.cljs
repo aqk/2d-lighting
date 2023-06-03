@@ -11,7 +11,7 @@
 ; End screen-specific vars
 
 ; In HTML canvas the coordinate (0, 0) is at the upper-left corner of the canvas
-; Therefore, we use :pos to mean the upper-right of sprites
+; Therefore, we use :pos to mean the upper-left corner of sprites
 
 (def MAX_SILO_AMMO 10)
 (def SILO_Y_POS SCREEN_HEIGHT-SILO_HEIGHT)

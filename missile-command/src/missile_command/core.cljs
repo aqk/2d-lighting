@@ -42,21 +42,35 @@
 
 (defn new-game-state [] {
   :start (timer/now)
+  :mouse '()
   :states [(new-menu-state) {:kind "game"}]
   })
 
 (defn draw-game [cc game]
   )
 
+(defn draw-mouse [cc x y]
+  (canvas/color-fill cc "#fff")
+  (canvas/text-fill
+   cc
+   (- x 1) (- y 1)
+   (str x "x" y)
+   )
+  )
+
 (defn draw-screen [cc game-state]
   (canvas/color-fill cc "#327")
-  (canvas/rect cc 0 0 800 600)
-  (canvas/fill cc)
+  (canvas/rect-fill cc 0 0 800 600)
+
   (let [game-stack (first (game-state :states))]
     (if (= (game-stack :kind) "menu")
       (draw-menu cc game-stack)
       (draw-game cc game-stack)
       )
+    )
+
+  (let [gs-mouse (game-state :mouse)]
+    (if (or (= gs-mouse '()) (= (gs-mouse :down) false)) '() (draw-mouse cc (gs-mouse :x) (gs-mouse :y)))
     )
   )
 
@@ -64,8 +78,61 @@
   (draw-screen cc game-state)
   )
 
-(let [cc (canvas-context) global-game-state (atom (new-game-state))]
-  (println global-game-state)
+(defn game-mouse-up [global-game-state]
+  (swap! global-game-state assoc :mouse '())
+  )
+
+(defn game-mouse-down [global-game-state x y]
+  (swap! global-game-state assoc :mouse {:x x :y y :down true})
+  )
+
+(defn game-mouse-move [global-game-state x y]
+  (let [m (@global-game-state :mouse)]
+    (if (= m '())
+      ()
+      (swap! global-game-state assoc :mouse {:x x :y y :down (m :down)})
+      )
+    )
+  )
+
+(let [ce (canvas-element)
+      cc (canvas-context)
+      global-game-state (atom (new-game-state))
+      ]
+
+  (-> ce
+      (.addEventListener
+       "mousedown"
+       (defn mouse-down-handler [event]
+         (let [x (. event -clientX)
+               y (. event -clientY)]
+           (game-mouse-down global-game-state x y)
+           )
+         )
+       )
+      )
+
+  (-> ce
+      (.addEventListener
+       "mousemove"
+       (defn mouse-move-handler [event]
+         (let [x (. event -clientX)
+               y (. event -clientY)]
+           (game-mouse-move global-game-state x y)
+           )
+         )
+       )
+      )
+
+  (-> ce
+      (.addEventListener
+       "mouseup"
+       (defn mouse-up-handler [event]
+         (game-mouse-up global-game-state)
+         )
+       )
+      )
+
   (canvas/on-frame
    (fn my-task []
      (let [current-time (timer/now) game-state @global-game-state]
@@ -77,3 +144,4 @@
      )
    )
   )
+

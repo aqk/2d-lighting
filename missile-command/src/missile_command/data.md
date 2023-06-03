@@ -12,5 +12,6 @@ All buildings (silos and cities) may be targeted by enemy missiles.
 
 There are also a few input-only or output-only states that do not have a direct impact on the game simulation:
 
-crosshair_pos - input variable; the target position for the next player_missile
-score - output variable; 
+* crosshair_pos - input variable; the target position for the next player_missile
+* score - output variable;
+

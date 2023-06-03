@@ -1,1 +1,5 @@
-{:deps {org.clojure/clojurescript {:mvn/version "1.11.54"}}}
+{:paths ["src" "timer.cljs/src/main" "canvas.cljs/src/main"]
+ :deps {
+        org.clojure/clojurescript {:mvn/version "1.11.54"}
+  }
+}

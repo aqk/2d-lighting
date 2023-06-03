@@ -1,0 +1,6 @@
+[submodule "missile-command/timer.cljs"]
+	path = missile-command/timer.cljs
+	url = https://github.com/helins/timer.cljs
+[submodule "missile-command/canvas.cljs"]
+	path = missile-command/canvas.cljs
+	url = https://github.com/helins/canvas.cljs

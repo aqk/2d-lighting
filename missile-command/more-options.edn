@@ -1,0 +1,3 @@
+{:preloads [helins.timer helins.canvas]
+ :main missile-command.core
+ }

@@ -2,10 +2,6 @@ extends Node2D
 
 signal ball_state(velocity, position)
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
 var velocity = Vector2(-100, 0)
 
 # Called when the node enters the scene tree for the first time.

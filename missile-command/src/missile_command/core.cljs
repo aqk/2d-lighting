@@ -13,17 +13,15 @@
   )
 
 
-(timer/every timer/main-thread
-          1000
-          (fn my-task []
-            (let [cc (canvas-context)]
-              (println cc)
-              (canvas/color-fill cc "#327")
-              (canvas/rect cc 0 0 800 600)
-              (canvas/fill cc)
-              )
-            )
-          )
+(let [cc (canvas-context)]
+  (canvas/on-frame
+   (fn my-task []
+     (canvas/color-fill cc "#327")
+     (canvas/rect cc 0 0 800 600)
+     (canvas/fill cc)
+     )
+   )
+  )
 
 (defn average [a b]
   (/ (+ a b) 2.0))

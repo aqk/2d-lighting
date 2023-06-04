@@ -81,7 +81,14 @@
     )
   )
 
-(defn draw-player-missile [cc pm] ())
+(defn draw-player-missile [cc pm]
+  (let [pos (pm :pos)]
+    (let [x (pos :x) y (pos :y)]
+      (canvas/color-fill cc "#f22")
+      (canvas/rect-fill cc (- x 1) (- y 1) 3 3)
+      )
+    )
+  )
 
 (defn draw-game [cc game]
   (canvas/color-fill cc "#850")
@@ -98,7 +105,7 @@
 
   (do
     (dorun
-     (for [c (cities/get-cities)]
+     (for [c (game :cities)]
        (draw-city cc c)
        )
      )
@@ -152,9 +159,12 @@
   )
 
 (defn update-state [game-state new-state]
-  (let [new-state
-        (update game-state :states util/const-update (cons new-state (rest (game-state :states))))]
-    new-state
+  (println "game-state" game-state)
+  (let [new-stack (cons new-state (rest (game-state :states)))]
+    (println "new-stack" new-stack)
+    (let [new-state (update game-state :states util/const-update new-stack)]
+      new-state
+      )
     )
   )
 
@@ -183,7 +193,7 @@
 (defn run-game-mode [cc current-time game-state]
   (let [our-state (first (game-state :states))
         mouse-state (sim-mouse-state (game-state :mouse))]
-    (let [new-state (step-game-state mouse-state)]
+    (let [new-state (sim/step-game-state mouse-state our-state)]
       (retire-mouse-click (update-state game-state new-state))
       )
     )

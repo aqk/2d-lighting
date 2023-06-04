@@ -21,7 +21,7 @@
 
 ;; create new objects
 ;; if mouse-clicked, try to create a player_missile
-(defn add_new_player_missile_if_clicked [old-game-state mouse-state]
+(defn add_new_player_missile_if_clicked [mouse-state old-game-state]
   (println "mouse-state" mouse-state)
   (if (get mouse-state :left_click)
     (let [origin {:x 0 :y 0}] ;; XXX Pick an origin
@@ -47,8 +47,8 @@
 
 ; returns a new game-stae
 (defn step-game-state [mouse-state old-game-state]
-  ;; move all objects
   (->> old-game-state
+       ;; move all objects
        (add_new_player_missile_if_clicked mouse-state)
        (move-player-missiles)
        (move-enemy-missiles)

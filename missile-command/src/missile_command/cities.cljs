@@ -2,8 +2,6 @@
 
 (require '[missile-command.util :as util])
 
-; TODO: Move screen dimensions to central location
-
 ; Begin screen-specific vars
 (def CITY_HEIGHT 20)
 (def CITY_WIDTH 20)

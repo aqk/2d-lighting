@@ -49,6 +49,8 @@
   :states [(new-menu-state) {:kind "game" :score 0 :wave 1}]
   })
 
+(cities/init-cities)
+
 (defn draw-silo [cc s]
   (canvas/color-fill cc "#850")
   (if (s :alive)
@@ -68,6 +70,16 @@
     )
   )
 
+(defn draw-city [cc c]
+  (canvas/color-fill cc "#32a")
+  (if (c :alive)
+    (let [x (c :x) y (c :y) HCW (/ cities/CITY_WIDTH 2) CH cities/CITY_HEIGHT]
+      (canvas/rect-fill cc (- x HCW) y HCW CH)
+      )
+    ()
+    )
+  )
+
 (defn draw-game [cc game]
   (canvas/color-fill cc "#850")
   (canvas/rect-fill cc 0 550 800 50)
@@ -77,6 +89,14 @@
     (dorun
      (for [s (silo/get-silos)]
        (draw-silo cc s)
+       )
+     )
+    )
+
+  (do
+    (dorun
+     (for [c (cities/get-cities)]
+       (draw-city cc c)
        )
      )
     )

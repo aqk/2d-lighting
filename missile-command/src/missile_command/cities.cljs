@@ -32,9 +32,9 @@
   )
 
 (defn init-cities []
-      (set! all_cities (auto-space 3 EDGE_BUFFER (make-city (- (/ util/SCREEN_WIDTH 2) CENTER_BUFFER))))
-      (set! all_cities (conj all_cities (make-city (auto-space 3 (+ (/ util/SCREEN_WIDTH 2) CENTER_BUFFER) (- util/SCREEN_WIDTH EDGE_BUFFER)))))
-)
+  (set! all_cities (map make-city (auto-space 3 EDGE_BUFFER (- (/ util/SCREEN_WIDTH 2) CENTER_BUFFER))))
+  (set! all_cities (concat all_cities (map make-city (auto-space 3 (+ (/ util/SCREEN_WIDTH 2) CENTER_BUFFER) (- util/SCREEN_WIDTH EDGE_BUFFER)))))
+  )
 
 ; pos is position of enemy projectile
 (defn is-city-hit [pos city_pos]
@@ -42,11 +42,12 @@
       	    (<= city_pos.y pos.y)
             (<= pos.x city_pos.x+CITY_WIDTH)
 	    (<= pos.y city_pos.y+CITY_HEIGHT)
-
       )
-)
+  )
 
 (init-cities)
+
+(defn get-cities [] all_cities)
 
 ;; (defn destroy-city)
 ;; (defn rebuild-city)

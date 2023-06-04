@@ -4,7 +4,7 @@
 
 ; Player missiles
 
-(def SPEED 10) ; pixels per frame
+(def SPEED 200) ; pixels per second
 
 (defn create-missile "Create new player missile on-screen"
       [pos target_pos]
@@ -22,9 +22,9 @@
      
 ;; )
 
-(defn move-player-missiles [player-missiles]
+(defn move-player-missiles [player-missiles time]
   (for [missile player-missiles]
-    {:pos (pos/move-along-line (get missile :pos) (get missile :target_pos) SPEED)
+    {:pos (pos/move-along-line (get missile :pos) (get missile :target_pos) SPEED time)
      :target_pos (get missile :target_pos)}
     )
   )

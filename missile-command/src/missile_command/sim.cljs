@@ -26,10 +26,7 @@
     (let [origin {:x 0 :y 0}] ;; XXX Pick an origin
       (let [new-missile (player_missile/create-missile origin (get mouse-state :pos))]
         (let [old-missile-list (old-game-state :player_missiles)]
-          (let [new-state (update-in old-game-state [:player_missiles] util/const-update (cons new-missile old-missile-list))]
-            (println "new missile" new-state)
-            new-state
-            )
+          (update-in old-game-state [:player_missiles] util/const-update (cons new-missile old-missile-list))
           )
         )
       )
@@ -37,7 +34,15 @@
     )
   )
 
-;(defn move-player-missiles [old-game-state] old-game-state)
+(defn move-player-missiles [time old-game-state]
+  (let [old-missiles (old-game-state :player_missiles)]
+    (let [new-missiles (player_missile/move-player-missiles old-missiles time)]
+      (let [new-state (update-in old-game-state [:player_missiles] util/const-update new-missiles)]
+        new-state
+        )
+      )
+    )
+  )
 
 (defn move-enemy-missiles [old-game-state] old-game-state)
 
@@ -47,23 +52,12 @@
 
 (defn collide-player-explosions [old-game-state] old-game-state)
 
-(defn move-player-missiles [old-game-state]
-  (let [old-missiles (old-game-state :player_missiles)]
-    (let [new-missiles (player_missile/move-player-missiles old-missiles)]
-      (let [new-state (update-in old-game-state [:player_missiles] util/const-update new-missiles)]
-        new-state
-        )
-      )
-    )
-  )
-
 ; returns a new game-stae
 (defn step-game-state [time-step mouse-state old-game-state]
-  (println "delta" time-step)
   (->> old-game-state
        ;; move all objects
        (add_new_player_missile_if_clicked mouse-state)
-       (move-player-missiles)
+       (move-player-missiles time-step)
        (move-enemy-missiles)
 
        ;; do collisions

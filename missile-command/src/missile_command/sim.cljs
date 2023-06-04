@@ -37,7 +37,7 @@
     )
   )
 
-(defn move-player-missiles [old-game-state] old-game-state)
+;(defn move-player-missiles [old-game-state] old-game-state)
 
 (defn move-enemy-missiles [old-game-state] old-game-state)
 
@@ -53,7 +53,7 @@
   (->> old-game-state
        ;; move all objects
        (add_new_player_missile_if_clicked mouse-state)
-       (move-player-missiles)
+       (player_missile/move-player-missiles)
        (move-enemy-missiles)
 
        ;; do collisions

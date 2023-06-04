@@ -23,4 +23,17 @@
 ; (is-within-circle {:x 10 :y 10} {:pos {:x 11 :y 11} :radius 2}) => true
 (defn is-within-circle [pos circle] (< (distance pos (get circle :pos)) (get circle :radius)))
 
+; normalize_2D_vector
+(defn norm [start_pos end_pos]
+     let [len (distance start_pos end_pos)
+     vector {(- (get end_pos :x) (get start_pos :x)) (- (get end_pos :y) (get start_pos :y))}]
+     {:x (/ (get vector :x) len) :y (/ (get vector :y) len)}
+)
+
+(defn calc-move-vector [pos target_pos move_distance]
+      (def n (norm pos target_pos))
+      { (* (get n :x) move_distance) (* (get n :y) move_distance) }
+)
+
+
 (defn move-along-line [pos target-pos speed] pos)

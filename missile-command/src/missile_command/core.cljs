@@ -2,6 +2,8 @@
 
 (require '[helins.timer :as timer])
 (require '[helins.canvas :as canvas])
+(require '[missile-command.util :as util])
+(require '[missile-command.silo :as silo])
 
 (defn canvas-element []
   (-> js/document
@@ -51,6 +53,22 @@
   (canvas/rect-fill cc 0 550 800 50)
 
   ;; Draw game stuff
+  (canvas/color-fill cc "#850")
+  (for [s silo/all_silos]
+    (let [p (s :pos)]
+      (let [x (util/x-of p)
+            y (util/y-of p)
+            HSW (/ silo/SILO_WIDTH 2)
+            HSH (/ silo/SILO_HEIGHT 2)]
+        (canvas/begin cc)
+        (canvas/move cc (- x HSW) (+ y HSH))
+        (canvas/line cc x (- y HSH))
+        (canvas/line cc (+ x HSW) (+ y HSH))
+        (canvas/close cc)
+        (canvas/fill cc)
+        )
+      )
+    )
 
   ;; Overlay score
   (canvas/color-fill cc "#fff")
@@ -92,11 +110,9 @@
     )
   )
 
-(defn const-update [a b] b)
-
 (defn pop-state [game-state]
   (let [new-state
-        (update game-state :states const-update (rest (game-state :states)))]
+        (update game-state :states util/const-update (rest (game-state :states)))]
     new-state
     )
   )
@@ -188,7 +204,7 @@
          (let [new-state (run-game cc current-time game-state)]
            (if (= new-state '())
              '()
-             (swap! global-game-state const-update new-state)
+             (swap! global-game-state util/const-update new-state)
              )
            )
          )

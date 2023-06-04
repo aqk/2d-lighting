@@ -2,3 +2,5 @@
 
 clj -M --main cljs.main --compile helins.timer
 clj -M --main cljs.main --compile helins.canvas
+clj -M --main cljs.main --compile missile-command.util
+clj -M --main cljs.main --compile missile-command.silo

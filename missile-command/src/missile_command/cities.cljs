@@ -5,6 +5,10 @@
 (def CITY_HEIGHT 20)
 (def CITY_WIDTH 20)
 
+(def EDGE_BUFFER 50)
+(def CENTER_BUFFER 10)
+(def CITY_BUFFER 10)
+
 (def SCREEN_HEIGHT 600)
 (def SCREEN_WIDTH 800)
 ; End screen-specific vars
@@ -17,9 +21,11 @@
 ; :name can double as the key used to fire from that silo
 (def all_cities [])
 
+(defn auto-space [num start end] (for [n (range 3)] (+ (* (/ (- end start) (- num 1)) n) start)))
+
 (defn init-cities []
-      (set! all_cities [for [x (range 3)] {:pos [40+(x*40) CITY_Y_POS]}])
-      (set! all_cities (conj all_cities [for [x (range 3)] :pos [40+x*40 + (SCREEN_WIDTH/2) CITY_Y_POS]}]))
+      (set! all_cities (auto-space 3 SCREEN_EDGE_BUFFER (- (/ SCREEN_WIDTH 2) CENTER_BUFFER)))
+      (set! all_cities (conj all_cities (auto-space 3 (+ (/ SCREEN_WIDTH 2) CENTER_BUFFER) (- SCREEN_WIDTH EDGE_BUFFER))))
 )
 
 ; pos is position of enemy projectile

@@ -48,7 +48,8 @@
 (defn collide-player-explosions [old-game-state] old-game-state)
 
 ; returns a new game-stae
-(defn step-game-state [mouse-state old-game-state]
+(defn step-game-state [time-step mouse-state old-game-state]
+  (println "delta" time-step)
   (->> old-game-state
        ;; move all objects
        (add_new_player_missile_if_clicked mouse-state)

@@ -46,6 +46,7 @@
 
 (defn new-game-state [] {
   :start (timer/now)
+  :last (timer/now)
   :mouse '()
   :states [(new-menu-state) (sim/init-game-state)]
   })
@@ -192,24 +193,26 @@
     )
   )
 
-(defn retire-mouse-click [new-state]
+(defn retire-mouse-click [new-state current-time]
   (let [mouse (new-state :mouse)]
     (if (= mouse '())
       new-state
       (let [updated-mouse (update-in mouse [:was-down] util/const-update (mouse :down))]
-        (let [u (update-in new-state [:mouse] util/const-update updated-mouse)]
-          u
-          )
+        (update-in new-state [:mouse] util/const-update updated-mouse)
         )
       )
     )
   )
 
+(defn set-last-time [game-state current-time]
+  (update-in game-state [:last] util/const-update current-time)
+  )
+
 (defn run-game-mode [cc current-time game-state]
   (let [our-state (first (game-state :states))
         mouse-state (sim-mouse-state (game-state :mouse))]
-    (let [new-state (sim/step-game-state mouse-state our-state)]
-      (retire-mouse-click (update-state game-state new-state))
+    (let [new-state (sim/step-game-state (- current-time (game-state :last)) mouse-state our-state)]
+      (set-last-time (retire-mouse-click (update-state game-state new-state) current-time) current-time)
       )
     )
   )

@@ -17,9 +17,6 @@
 
 (def CITY_Y_POS (- (- util/SCREEN_HEIGHT util/GROUND_HEIGHT) CITY_HEIGHT))
 
-; :name can double as the key used to fire from that silo
-(def all_cities [])
-
 (defn auto-space [num start end] (for [n (range 3)] (+ (* (/ (- end start) (- num 1)) n) start)))
 
 (defn make-city [x]
@@ -30,10 +27,10 @@
   )
 
 (defn init-cities []
-  (set! all_cities (map make-city (auto-space 3 EDGE_BUFFER (- (/ util/SCREEN_WIDTH 2) CENTER_BUFFER))))
-  (set! all_cities (concat all_cities (map make-city (auto-space 3 (+ (/ util/SCREEN_WIDTH 2) CENTER_BUFFER) (- util/SCREEN_WIDTH EDGE_BUFFER)))))
-  all_cities
-)
+  (let [all-cities (map make-city (auto-space 3 EDGE_BUFFER (- (/ util/SCREEN_WIDTH 2) CENTER_BUFFER)))]
+    (concat all-cities (map make-city (auto-space 3 (+ (/ util/SCREEN_WIDTH 2) CENTER_BUFFER) (- util/SCREEN_WIDTH EDGE_BUFFER))))
+    )
+  )
 
 ; pos is position of enemy projectile
 (defn is-city-hit [pos city_pos]
@@ -43,10 +40,6 @@
 	    (<= pos.y city_pos.y+CITY_HEIGHT)
       )
   )
-
-(init-cities)
-
-(defn get-cities [] all_cities)
 
 ;; (defn destroy-city)
 ;; (defn rebuild-city)

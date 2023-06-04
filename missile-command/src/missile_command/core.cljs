@@ -5,6 +5,7 @@
 (require '[missile-command.util :as util])
 (require '[missile-command.silo :as silo])
 (require '[missile-command.cities :as cities])
+(require '[missile-command.sim :as sim])
 
 (defn canvas-element []
   (-> js/document
@@ -46,7 +47,7 @@
 (defn new-game-state [] {
   :start (timer/now)
   :mouse '()
-  :states [(new-menu-state) {:kind "game" :score 0 :wave 1}]
+  :states [(new-menu-state) (sim/init-game-state)]
   })
 
 (cities/init-cities)
@@ -80,6 +81,15 @@
     )
   )
 
+(defn draw-player-missile [cc pm]
+  (let [pos (pm :pos)]
+    (let [x (pos :x) y (pos :y)]
+      (canvas/color-fill cc "#f22")
+      (canvas/rect-fill cc (- x 1) (- y 1) 3 3)
+      )
+    )
+  )
+
 (defn draw-game [cc game]
   (canvas/color-fill cc "#850")
   (canvas/rect-fill cc 0 550 800 50)
@@ -95,7 +105,7 @@
 
   (do
     (dorun
-     (for [c (cities/get-cities)]
+     (for [c (game :cities)]
        (draw-city cc c)
        )
      )
@@ -148,8 +158,45 @@
     )
   )
 
+(defn update-state [game-state new-state]
+  (println "game-state" game-state)
+  (let [new-stack (cons new-state (rest (game-state :states)))]
+    (println "new-stack" new-stack)
+    (let [new-state (update game-state :states util/const-update new-stack)]
+      new-state
+      )
+    )
+  )
+
+(defn sim-mouse-state [m]
+  (if (= m '())
+    {:left_click false
+     :pos {:x -1000000 :y -1000000}
+     }
+    {:left_click (and (not (m :was-down)) (m :down))
+     :pos m
+     }
+    )
+  )
+
+(defn retire-mouse-click [new-state]
+  (let [mouse (new-state :mouse)]
+    (if (= mouse '())
+      new-state
+      (let [updated-mouse (update mouse assoc :was-down (mouse :down))]
+        (update new-state assoc :mouse updated-mouse)
+        )
+      )
+    )
+  )
+
 (defn run-game-mode [cc current-time game-state]
-  '()
+  (let [our-state (first (game-state :states))
+        mouse-state (sim-mouse-state (game-state :mouse))]
+    (let [new-state (sim/step-game-state mouse-state our-state)]
+      (retire-mouse-click (update-state game-state new-state))
+      )
+    )
   )
 
 (defn run-menu-mode [cc current-time game-state]
@@ -178,7 +225,7 @@
   )
 
 (defn game-mouse-down [global-game-state x y]
-  (swap! global-game-state assoc :mouse {:x x :y y :down true})
+  (swap! global-game-state assoc :mouse {:x x :y y :down true :was-down false})
   )
 
 (defn game-mouse-move [global-game-state x y]

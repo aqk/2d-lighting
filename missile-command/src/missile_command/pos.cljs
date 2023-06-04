@@ -1,3 +1,4 @@
+(ns missile-command.pos)
 
 ; positions are represented as maps of the form {:x 0 :y 2}
 
@@ -34,3 +35,5 @@
       { (* (get n :x) move_distance) (* (get n :y) move_distance) }
 )
 
+
+(defn move-along-line [pos target-pos speed] pos)

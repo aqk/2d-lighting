@@ -4,6 +4,7 @@
 (require '[helins.canvas :as canvas])
 (require '[missile-command.util :as util])
 (require '[missile-command.silo :as silo])
+(require '[missile-command.cities :as cities])
 
 (defn canvas-element []
   (-> js/document

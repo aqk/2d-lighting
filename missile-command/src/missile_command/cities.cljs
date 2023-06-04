@@ -1,3 +1,6 @@
+(ns missile-command.cities)
+
+(require '[missile-command.util :as util])
 
 ; TODO: Move screen dimensions to central location
 
@@ -9,23 +12,28 @@
 (def CENTER_BUFFER 10)
 (def CITY_BUFFER 10)
 
-(def SCREEN_HEIGHT 600)
-(def SCREEN_WIDTH 800)
 ; End screen-specific vars
 
 ; In HTML canvas the coordinate (0, 0) is at the upper-left corner of the canvas
 ; Therefore, we use :pos to mean the upper-right of sprites
 
-(def CITY_Y_POS SCREEN_HEIGHT-CITY_HEIGHT)
+(def CITY_Y_POS (- (- util/SCREEN_HEIGHT util/GROUND_HEIGHT) CITY_HEIGHT))
 
 ; :name can double as the key used to fire from that silo
 (def all_cities [])
 
 (defn auto-space [num start end] (for [n (range 3)] (+ (* (/ (- end start) (- num 1)) n) start)))
 
+(defn make-city [x]
+  {:alive true
+   :x x
+   :y CITY_Y_POS
+   }
+  )
+
 (defn init-cities []
-      (set! all_cities (auto-space 3 SCREEN_EDGE_BUFFER (- (/ SCREEN_WIDTH 2) CENTER_BUFFER)))
-      (set! all_cities (conj all_cities (auto-space 3 (+ (/ SCREEN_WIDTH 2) CENTER_BUFFER) (- SCREEN_WIDTH EDGE_BUFFER))))
+      (set! all_cities (auto-space 3 EDGE_BUFFER (make-city (- (/ util/SCREEN_WIDTH 2) CENTER_BUFFER))))
+      (set! all_cities (conj all_cities (make-city (auto-space 3 (+ (/ util/SCREEN_WIDTH 2) CENTER_BUFFER) (- util/SCREEN_WIDTH EDGE_BUFFER)))))
 )
 
 ; pos is position of enemy projectile
@@ -38,7 +46,7 @@
       )
 )
 
-(defn destroy-city)
-(defn rebuild-city)
+(init-cities)
 
-
+;; (defn destroy-city)
+;; (defn rebuild-city)

@@ -15,7 +15,7 @@
 ; Therefore, we use :pos to mean the upper-left corner of sprites
 
 (def MAX_SILO_AMMO 10)
-(def SILO_Y_POS (- (- util/SCREEN_HEIGHT SILO_HEIGHT) 50))
+(def SILO_Y_POS (- (- util/SCREEN_HEIGHT SILO_HEIGHT) util/GROUND_HEIGHT))
 
 ; :name can double as the key used to fire from that silo
 (def all_silos [{:alive true :ammo MAX_SILO_AMMO :name "a" :pos [SILO_WIDTH SILO_Y_POS]}

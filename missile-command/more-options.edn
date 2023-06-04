@@ -1,3 +1,8 @@
-{:preloads [helins.timer helins.canvas missile-command.util missile-command.silo]
+{:preloads [helins.timer
+            helins.canvas
+            missile-command.util
+            missile-command.silo
+            missile-command.cities
+            ]
  :main missile-command.core
  }

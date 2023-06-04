@@ -47,6 +47,8 @@
   })
 
 (defn draw-game [cc game]
+  (canvas/color-fill cc "#850")
+  (canvas/rect-fill cc 0 550 800 50)
   )
 
 (defn draw-mouse [cc x y]
@@ -56,6 +58,15 @@
    (- x 1) (- y 1)
    (str x "x" y)
    )
+  )
+
+(defn is-mouse-down [game-state]
+  (if (= (game-state :mouse) '())
+    false
+    (let [m (game-state :mouse)]
+      (m :down)
+      )
+    )
   )
 
 (defn draw-screen [cc game-state]
@@ -70,12 +81,42 @@
     )
 
   (let [gs-mouse (game-state :mouse)]
-    (if (or (= gs-mouse '()) (= (gs-mouse :down) false)) '() (draw-mouse cc (gs-mouse :x) (gs-mouse :y)))
+    (if (is-mouse-down game-state) (draw-mouse cc (gs-mouse :x) (gs-mouse :y)) '())
+    )
+  )
+
+(defn const-update [a b] b)
+
+(defn pop-state [game-state]
+  (let [new-state
+        (update game-state :states const-update (rest (game-state :states)))]
+    new-state
+    )
+  )
+
+(defn run-game-mode [cc current-time game-state]
+  '()
+  )
+
+(defn run-menu-mode [cc current-time game-state]
+  (if (is-mouse-down game-state)
+    (pop-state game-state)
+    '()
     )
   )
 
 (defn run-game [cc current-time game-state]
-  (draw-screen cc game-state)
+  (let [new-state
+        (let [game-stack (first (game-state :states))]
+          (if (= (game-stack :kind) "menu")
+            (run-menu-mode cc current-time game-state)
+            (run-game-mode cc current-time game-state)
+            )
+          )
+        ]
+    (draw-screen cc game-state)
+    new-state
+    )
   )
 
 (defn game-mouse-up [global-game-state]
@@ -137,8 +178,12 @@
    (fn my-task []
      (let [current-time (timer/now) game-state @global-game-state]
        (if game-state
-         (run-game cc current-time game-state)
-         ()
+         (let [new-state (run-game cc current-time game-state)]
+           (if (= new-state '())
+             '()
+             (swap! global-game-state const-update new-state)
+             )
+           )
          )
        )
      )

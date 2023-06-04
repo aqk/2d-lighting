@@ -24,7 +24,7 @@
 (defn is-within-circle [pos circle] (< (distance pos (get circle :pos)) (get circle :radius)))
 
 ; normalize_2D_vector
-(def norm [start_pos end_pos]
+(defn norm [start_pos end_pos]
      let [len (distance start_pos end_pos)
      vector {(- (get end_pos :x) (get start_pos :x)) (- (get end_pos :y) (get start_pos :y))}]
      {:x (/ (get vector :x) len) :y (/ (get vector :y) len)}

@@ -3,6 +3,8 @@
             missile-command.util
             missile-command.silo
             missile-command.cities
+            missile-command.player_missile
+            missile-command.sim
             ]
  :main missile-command.core
  }

@@ -81,11 +81,18 @@
     )
   )
 
+(defn mark-point [cc color x y]
+  (canvas/color-fill cc color)
+  (canvas/rect-fill cc (- x 1) (- y 1) 3 3)
+  )
+
 (defn draw-player-missile [cc pm]
-  (let [pos (pm :pos)]
+  (let [pos (pm :pos) tp (pm :target_pos)]
     (let [x (pos :x) y (pos :y)]
-      (canvas/color-fill cc "#f22")
-      (canvas/rect-fill cc (- x 1) (- y 1) 3 3)
+      (mark-point cc "#f22" x y)
+      )
+    (let [x (tp :x) y (tp :y)]
+      (mark-point cc "#f88" x y)
       )
     )
   )
@@ -107,6 +114,14 @@
     (dorun
      (for [c (game :cities)]
        (draw-city cc c)
+       )
+     )
+    )
+
+  (do
+    (dorun
+     (for [p (game :player_missiles)]
+       (draw-player-missile cc p)
        )
      )
     )
@@ -153,16 +168,14 @@
 
 (defn pop-state [game-state]
   (let [new-state
-        (update game-state :states util/const-update (rest (game-state :states)))]
+        (update-in game-state [:states] util/const-update (rest (game-state :states)))]
     new-state
     )
   )
 
 (defn update-state [game-state new-state]
-  (println "game-state" game-state)
   (let [new-stack (cons new-state (rest (game-state :states)))]
-    (println "new-stack" new-stack)
-    (let [new-state (update game-state :states util/const-update new-stack)]
+    (let [new-state (update-in game-state [:states] util/const-update new-stack)]
       new-state
       )
     )
@@ -183,8 +196,10 @@
   (let [mouse (new-state :mouse)]
     (if (= mouse '())
       new-state
-      (let [updated-mouse (update mouse assoc :was-down (mouse :down))]
-        (update new-state assoc :mouse updated-mouse)
+      (let [updated-mouse (update-in mouse [:was-down] util/const-update (mouse :down))]
+        (let [u (update-in new-state [:mouse] util/const-update updated-mouse)]
+          u
+          )
         )
       )
     )

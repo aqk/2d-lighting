@@ -34,6 +34,7 @@
 (defn init-cities []
       (set! all_cities (auto-space 3 EDGE_BUFFER (make-city (- (/ util/SCREEN_WIDTH 2) CENTER_BUFFER))))
       (set! all_cities (conj all_cities (make-city (auto-space 3 (+ (/ util/SCREEN_WIDTH 2) CENTER_BUFFER) (- util/SCREEN_WIDTH EDGE_BUFFER)))))
+      all_cities
 )
 
 ; pos is position of enemy projectile

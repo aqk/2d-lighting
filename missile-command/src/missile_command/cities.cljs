@@ -2,7 +2,7 @@
 
 (require '[missile-command.util :as util])
 
-; TODO: Move screen dimensions to central location
+; TODO: Add idea of demolished / repaired city
 
 ; Begin screen-specific vars
 (def CITY_HEIGHT 20)

@@ -212,6 +212,7 @@
   (let [our-state (first (game-state :states))
         mouse-state (sim-mouse-state (game-state :mouse))]
     (let [new-state (sim/step-game-state (- current-time (game-state :last)) mouse-state our-state)]
+      (println "after step game" new-state)
       (set-last-time (retire-mouse-click (update-state game-state new-state) current-time) current-time)
       )
     )

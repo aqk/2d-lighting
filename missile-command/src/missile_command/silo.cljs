@@ -9,20 +9,18 @@
 (def SILO_HEIGHT 20)
 (def SILO_WIDTH 20)
 
-(def SCREEN_HEIGHT 600)
-(def SCREEN_WIDTH 800)
 ; End screen-specific vars
 
 ; In HTML canvas the coordinate (0, 0) is at the upper-left corner of the canvas
 ; Therefore, we use :pos to mean the upper-left corner of sprites
 
 (def MAX_SILO_AMMO 10)
-(def SILO_Y_POS (- SCREEN_HEIGHT SILO_HEIGHT))
+(def SILO_Y_POS (- (- util/SCREEN_HEIGHT SILO_HEIGHT) 50))
 
 ; :name can double as the key used to fire from that silo
-(def all_silos [{:alive true :ammo MAX_SILO_AMMO :name "a" :pos [0 SILO_Y_POS]}
-     	          {:alive true :ammo MAX_SILO_AMMO :name "s" :pos [(/ (- SCREEN_WIDTH SILO_WIDTH) 2) SILO_Y_POS]}
-		            {:alive true :ammo MAX_SILO_AMMO :name "d" :pos [(- SCREEN_WIDTH SILO_WIDTH) SILO_Y_POS]} ])
+(def all_silos [{:alive true :ammo MAX_SILO_AMMO :name "a" :pos [SILO_WIDTH SILO_Y_POS]}
+     	          {:alive true :ammo MAX_SILO_AMMO :name "s" :pos [(/ (- util/SCREEN_WIDTH SILO_WIDTH) 2) SILO_Y_POS]}
+		            {:alive true :ammo MAX_SILO_AMMO :name "d" :pos [(- util/SCREEN_WIDTH SILO_WIDTH) SILO_Y_POS]} ])
 
 
 ;(defn set-silo-ammo)

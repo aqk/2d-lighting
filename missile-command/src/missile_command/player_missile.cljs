@@ -6,8 +6,8 @@
 
 (defn create-missile "Create new player missile on-screen"
       [pos target_pos]
-      (set! all_missiles (conj all_missiles {:pos [] :target_pos [] :speed SPEED}))
-      ; todo: return missile?
+      (set! all_missiles (conj all_missiles {:pos pos :target_pos target_pos :speed SPEED}))
+      player_missiles
 )
 
 ; Note: we may have to destroy other types of enemies in future
@@ -15,4 +15,10 @@
      [pos radius]
      
 )
-     
+
+(def move-player-missiles []
+     (set! player_missiles (for [missile player_missiles]
+           {:pos (move-along-line (get missile :pos) (get missile :target_pos) SPEED)
+            :target_pos (get missile :target_pos)} ))
+     player_missiles
+)

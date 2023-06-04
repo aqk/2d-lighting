@@ -4,6 +4,7 @@
 (require '[helins.canvas :as canvas])
 (require '[missile-command.util :as util])
 (require '[missile-command.silo :as silo])
+(require '[missile-command.cities :as cities])
 
 (defn canvas-element []
   (-> js/document
@@ -48,26 +49,36 @@
   :states [(new-menu-state) {:kind "game" :score 0 :wave 1}]
   })
 
+(defn draw-silo [cc s]
+  (canvas/color-fill cc "#850")
+  (if (s :alive)
+    (let [p (s :pos)]
+      (let [x (util/x-of p)
+            y (util/y-of p)
+            HSW (/ silo/SILO_WIDTH 2)
+            SH silo/SILO_HEIGHT]
+        (canvas/begin cc (- x HSW) (+ y SH))
+        (canvas/line cc x y)
+        (canvas/line cc (+ x HSW) (+ y SH))
+        (canvas/close cc)
+        (canvas/fill cc)
+        )
+      )
+    ()
+    )
+  )
+
 (defn draw-game [cc game]
   (canvas/color-fill cc "#850")
   (canvas/rect-fill cc 0 550 800 50)
 
   ;; Draw game stuff
-  (canvas/color-fill cc "#850")
-  (for [s silo/all_silos]
-    (let [p (s :pos)]
-      (let [x (util/x-of p)
-            y (util/y-of p)
-            HSW (/ silo/SILO_WIDTH 2)
-            HSH (/ silo/SILO_HEIGHT 2)]
-        (canvas/begin cc)
-        (canvas/move cc (- x HSW) (+ y HSH))
-        (canvas/line cc x (- y HSH))
-        (canvas/line cc (+ x HSW) (+ y HSH))
-        (canvas/close cc)
-        (canvas/fill cc)
-        )
-      )
+  (do
+    (dorun
+     (for [s (silo/get-silos)]
+       (draw-silo cc s)
+       )
+     )
     )
 
   ;; Overlay score

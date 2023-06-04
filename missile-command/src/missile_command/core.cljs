@@ -43,12 +43,19 @@
 (defn new-game-state [] {
   :start (timer/now)
   :mouse '()
-  :states [(new-menu-state) {:kind "game"}]
+  :states [(new-menu-state) {:kind "game" :score 0 :wave 1}]
   })
 
 (defn draw-game [cc game]
   (canvas/color-fill cc "#850")
   (canvas/rect-fill cc 0 550 800 50)
+
+  ;; Draw game stuff
+
+  ;; Overlay score
+  (canvas/color-fill cc "#fff")
+  (canvas/text-fill cc 10 10 (str "Score: " (game :score)))
+  (canvas/text-fill cc 700 10 (str "Wave: " (game :wave)))
   )
 
 (defn draw-mouse [cc x y]
